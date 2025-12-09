@@ -33,8 +33,8 @@ This project is ideal for:
 ### Installation
 
 ```bash
-git clone https://github.com/huypq02/quantumforge.git
-cd quantumforge
+git clone https://github.com/huypq02/quantum-forge.git
+cd quantum-forge
 pip install -r requirements.txt
 ```
 
