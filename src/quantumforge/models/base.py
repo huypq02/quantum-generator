@@ -12,3 +12,19 @@ class BaseModel(ABC):
     def load_model(self) -> None:
         """Load model from external source."""
         pass
+
+    @abstractmethod
+    def generate(
+            self, 
+            prompt, 
+            max_new_tokens = 512, 
+            temperature = 0.7, 
+            top_p = 0.95, 
+            **kwargs
+    ) -> str:
+        """Generate text from a prompt."""
+        pass
+
+    def tokenize(self, text: str) -> list:
+        """Tokenize input text (optional)."""
+        pass
