@@ -1,0 +1,10 @@
+# Core
+torch>=2.1.0        # Use the CUDA build if you have a GPU (pip install torch --index-url https://download.pytorch.org/whl/cu121)
+transformers>=4.40.0
+accelerate>=0.25.0  # Device placement and sharded loading
+
+# Quantization (needed if you use quantize=True)
+bitsandbytes>=0.43.0
+
+# Optional but recommended
+einops>=0.6.0
