@@ -16,10 +16,10 @@ class BaseModel(ABC):
     @abstractmethod
     def generate(
             self, 
-            prompt, 
-            max_new_tokens = 512, 
-            temperature = 0.7, 
-            top_p = 0.95, 
+            prompt: str, 
+            max_new_tokens: int = 512, 
+            temperature: float = 0.7, 
+            top_p: float = 0.9,
             **kwargs
     ) -> str:
         """Generate text from a prompt."""

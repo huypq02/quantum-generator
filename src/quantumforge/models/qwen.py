@@ -2,9 +2,9 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from .base import BaseModel
 
-class DeepSeekModel(BaseModel):
+class QwenModel(BaseModel):
     def load_model(self) -> None:
-        """Load DeepSeek model."""
+        """Load Qwen model."""
         quantize = self.config.get("quantize", False)
 
         self.tokenizer = AutoTokenizer.from_pretrained(
@@ -22,44 +22,46 @@ class DeepSeekModel(BaseModel):
                 quantization_config=quantization_config
             )
         else:
-            dtype = torch.float16 if torch.cuda.is_available() else torch.float32
             self.model = AutoModelForCausalLM.from_pretrained(
                 self.model_name, 
                 trust_remote_code=True, 
-                torch_dtype=dtype,
+                torch_dtype="auto",
                 device_map="auto"
             )
             
         self.model.eval()
-    
+
     def generate(
             self, 
             prompt: str, 
             max_new_tokens: int = 512, 
             temperature: float = 0.7, 
             top_p: float = 0.9,
+            system_prompt: str = "You are Qwen, created by Alibaba Cloud. You are a helpful assistant.",
             **kwargs
     ) -> str:
         """Generate text from a prompt."""
         messages = [
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt}
         ]
-        inputs = self.tokenizer.apply_chat_template(
-            messages=messages,
-            add_generation_prompt=True, 
-            return_tensors="pt"
-        ).to(self.model.device)
+        text = self.tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True
+        )
 
-        outputs = self.model.generate(
-            inputs,
+        model_inputs = self.tokenizer([text], return_tensors="pt").to(self.model.device)
+
+        generated_ids = self.model.generate(
+            **model_inputs,
             max_new_tokens=max_new_tokens,
             temperature=temperature,
             top_p=top_p,
-            do_sample=False,
-            top_k=50,
-            num_return_sequences=1,
-            eos_token_id=self.tokenizer.eos_token_id,
             **kwargs
         )
+        generated_ids = [
+            output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+        ]
 
-        return self.tokenizer.decode(outputs[0][len(inputs[0]):], skip_special_tokens=True)
+        return self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
