@@ -5,32 +5,36 @@ from .base import BaseModel
 class DeepSeekModel(BaseModel):
     def load_model(self) -> None:
         """Load DeepSeek model."""
-        quantize = self.config.get("quantize", False)
+        try:
+            quantize = self.config.get("quantize", False)
 
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            self.model_name, 
-            trust_remote_code=True
-        )
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                self.model_name, 
+                trust_remote_code=True
+            )
 
-        if quantize:
-            quantization_config = BitsAndBytesConfig(
-                load_in_4bit=True
-            )
-            self.model = AutoModelForCausalLM.from_pretrained(
-                self.model_name, 
-                device_map="auto",
-                quantization_config=quantization_config
-            )
-        else:
-            dtype = torch.float16 if torch.cuda.is_available() else torch.float32
-            self.model = AutoModelForCausalLM.from_pretrained(
-                self.model_name, 
-                trust_remote_code=True, 
-                torch_dtype=dtype,
-                device_map="auto"
-            )
-            
-        self.model.eval()
+            if quantize:
+                quantization_config = BitsAndBytesConfig(
+                    load_in_4bit=True
+                )
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    self.model_name, 
+                    device_map="auto",
+                    quantization_config=quantization_config
+                )
+            else:
+                dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    self.model_name, 
+                    trust_remote_code=True, 
+                    dtype=dtype,
+                    device_map="auto"
+                )
+                
+            self.model.eval()
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            raise
     
     def generate(
             self, 
@@ -45,7 +49,7 @@ class DeepSeekModel(BaseModel):
             {"role": "user", "content": prompt}
         ]
         inputs = self.tokenizer.apply_chat_template(
-            messages=messages,
+            messages,
             add_generation_prompt=True, 
             return_tensors="pt"
         ).to(self.model.device)

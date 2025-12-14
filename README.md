@@ -40,6 +40,34 @@ pip install -r requirements.txt
 
 ---
 
+## 🧪 Running Tests
+
+Run all unit tests:
+
+```bash
+python -m unittest discover -s tests/unit -p "test_*.py"
+```
+
+Run a specific test module:
+
+```bash
+python -m unittest tests.unit.test_models
+```
+
+Run a specific test class:
+
+```bash
+python -m unittest tests.unit.test_models.TestDeepSeekModel
+```
+
+Run a specific test method:
+
+```bash
+python -m unittest tests.unit.test_models.TestDeepSeekModel.test_load_model
+```
+
+---
+
 ## 🛠️ Models Supported
 
 | Model                 | Language       | Params | License    | Supports QASM? |
