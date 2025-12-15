@@ -8,14 +8,15 @@ class CodeGemmaModel(BaseModel):
     def load_model(self) -> None:
         """Load CodeGemma model."""
         try:
-            # Load environments
-            load_dotenv("./.env.example")
-
+            # Load environment variables
+            load_dotenv()
+            
+            hf_token = os.environ.get("HF_TOKEN")
             quantize = self.config.get("quantize", False)
 
             self.tokenizer = GemmaTokenizer.from_pretrained(
                 self.model_name,
-                token=os.environ.get("HF_TOKEN"),
+                token=hf_token,
                 trust_remote_code=True
             )
 
@@ -24,13 +25,15 @@ class CodeGemmaModel(BaseModel):
                     load_in_4bit=True
                 )
                 self.model = AutoModelForCausalLM.from_pretrained(
-                    self.model_name, 
+                    self.model_name,
+                    token=hf_token,
                     device_map="auto",
                     quantization_config=quantization_config
                 )
             else:
                 self.model = AutoModelForCausalLM.from_pretrained(
                     self.model_name, 
+                    token=hf_token,
                     trust_remote_code=True
                 )
                 
