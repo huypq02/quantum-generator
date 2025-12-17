@@ -1,15 +1,26 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from .base import BaseModel
+import os
+from dotenv import load_dotenv
 
 class CodeLlamaModel(BaseModel):
     def load_model(self) -> None:
         """Load CodeLlama model."""
         try:
+            # Load environment variables
+            load_dotenv()
+            
+            hf_token = os.environ.get("HF_TOKEN")
+            print(hf_token)
+
             quantize = self.config.get("quantize", False)
 
             self.tokenizer = AutoTokenizer.from_pretrained(
-                self.model_name, 
+                self.model_name,
+                token=hf_token,
+                trust_remote_code=True
+
             )
 
             if quantize:
@@ -19,6 +30,7 @@ class CodeLlamaModel(BaseModel):
                 self.model = AutoModelForCausalLM.from_pretrained(
                     self.model_name, 
                     device_map="auto",
+                    token=hf_token,
                     quantization_config=quantization_config
                 )
             else:
@@ -26,7 +38,8 @@ class CodeLlamaModel(BaseModel):
                 self.model = AutoModelForCausalLM.from_pretrained(
                     self.model_name, 
                     dtype=dtype,
-                    device_map="auto"
+                    device_map="auto",
+                    token=hf_token
                 )
                 
             self.model.eval()
