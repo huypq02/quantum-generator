@@ -100,12 +100,12 @@ python -m unittest tests.unit.test_models.TestDeepSeekModel.test_load_model
 ```qasm
 OPENQASM 3;
 include "stdgates.inc";
-qubit q[2];
-bit c[2];
+qubit[1] q;
+bit[1] c;
 h q;
-z q[1];
-h q;
-measure q -> c;
+z q[0];
+h q[0];
+c = measure q;
 ```
 
 ---
