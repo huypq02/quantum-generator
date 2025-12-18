@@ -13,7 +13,7 @@ This project is ideal for:
 ## 🧰 Features
 
 - ✅ Generate **Qiskit**, **PennyLane**, **Cirq**, and **QASM 3** code
-- 🤖 Supports **DeepSeek-Coder**, **CodeLlama**, **Qwen**, or any HuggingFace-compatible open-source LLM
+- 🤖 Supports **DeepSeek-Coder**, **CodeLlama**, **Qwen**, **CodeGemma**, or any HuggingFace-compatible open-source LLM
 - 🔁 Integrates **RAG pipeline** using LangChain + ChromaDB
 - ⚡ Compatible with **Google Colab T4**, **RunPod**, or **local inference**
 - 📦 API-ready: deploy as a REST endpoint via **Cloud Run** or **FastAPI**
@@ -73,8 +73,9 @@ python -m unittest tests.unit.test_models.TestDeepSeekModel.test_load_model
 | Model                 | Language       | Params | License    | Supports QASM? |
 | --------------------- | -------------- | ------ | ---------- | -------------- |
 | DeepSeek-Coder 6.7B   | English/Coding | 6.7B   | MIT        | ✅             |
-| Qwen1.5-Coder 7B      | Multilingual   | 7B     | Apache 2.0 | ✅             |
+| Qwen2.5-Coder 7B      | Multilingual   | 7B     | Apache 2.0 | ✅             |
 | CodeLlama 7B Instruct | English/Coding | 7B     | Meta LLAMA | ✅             |
+| CodeGemma 7B          | English/Coding | 7B     | Gemma      | ✅             |
 
 ---
 
