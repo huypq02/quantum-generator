@@ -10,13 +10,25 @@ This project is ideal for:
 
 ---
 
+> ## ⚠️ 🚧 **PROJECT STATUS: UNDER DEVELOPMENT** 🚧 ⚠️
+>
+> **THIS PROJECT IS CURRENTLY IN THE PLANNING AND DEVELOPMENT PHASE.**
+>
+> All features, models, deployment options, and functionalities described in this README are **PLANNED** and may not be fully implemented yet. This documentation serves as a roadmap and design specification.
+>
+> Please check the repository for actual implementation status before using in production.
+
+---
+
 ## 🧰 Features
 
-- ✅ Generate **Qiskit**, **PennyLane**, **Cirq**, and **QASM 3** code
-- 🤖 Supports **DeepSeek-Coder**, **CodeLlama**, **Qwen**, **CodeGemma**, or any HuggingFace-compatible open-source LLM
-- 🔁 Integrates **RAG pipeline** using LangChain + ChromaDB
-- ⚡ Compatible with **Google Colab T4**, **RunPod**, or **local inference**
-- 📦 API-ready: deploy as a REST endpoint via **Cloud Run** or **FastAPI**
+> ### 📋 **PLANNED FEATURES** - Not all features are implemented yet
+
+- ✅ Generate **Qiskit**, **PennyLane**, **Cirq**, and **QASM 3** code _(Planned)_
+- 🤖 Supports **DeepSeek-Coder**, **CodeLlama**, **Qwen**, **CodeGemma**, or any HuggingFace-compatible open-source LLM _(Planned)_
+- 🔁 Integrates **RAG pipeline** using LangChain + ChromaDB _(Planned)_
+- ⚡ Compatible with **Google Colab T4**, **RunPod**, or **local inference** _(Planned)_
+- 📦 API-ready: deploy as a REST endpoint via **Cloud Run** or **FastAPI** _(Planned)_
 
 ---
 
@@ -70,24 +82,32 @@ python -m unittest tests.unit.test_models.TestDeepSeekModel.test_load_model
 
 ## 🛠️ Models Supported
 
-| Model                 | Language       | Params | License    | Supports QASM? |
-| --------------------- | -------------- | ------ | ---------- | -------------- |
-| DeepSeek-Coder 6.7B   | English/Coding | 6.7B   | MIT        | ✅             |
-| Qwen2.5-Coder 7B      | Multilingual   | 7B     | Apache 2.0 | ✅             |
-| CodeLlama 7B Instruct | English/Coding | 7B     | Meta LLAMA | ✅             |
-| CodeGemma 7B          | English/Coding | 7B     | Gemma      | ✅             |
+> ### 🔮 **PLANNED MODEL SUPPORT** - Integration in progress
+>
+> The models listed below are targeted for integration. Actual support may vary.
+
+| Model                 | Language       | Params | License    | Supports QASM? | Status    |
+| --------------------- | -------------- | ------ | ---------- | -------------- | --------- |
+| DeepSeek-Coder 6.7B   | English/Coding | 6.7B   | MIT        | ✅             | _Planned_ |
+| Qwen2.5-Coder 7B      | Multilingual   | 7B     | Apache 2.0 | ✅             | _Planned_ |
+| CodeLlama 7B Instruct | English/Coding | 7B     | Meta LLAMA | ✅             | _Planned_ |
+| CodeGemma 7B          | English/Coding | 7B     | Gemma      | ✅             | _Planned_ |
 
 ---
 
 ## 📦 Deployment Options
 
-🌐 [ ] Run in Colab (with quantized 4-bit models)
+> ### 🚀 **PLANNED DEPLOYMENT OPTIONS** - Implementation roadmap
+>
+> These deployment options are part of the project roadmap and are not yet available.
 
-☁️ [ ] Deploy to Cloud Run or Vertex AI
+🌐 [ ] Run in Colab (with quantized 4-bit models) _(Not yet implemented)_
 
-🧪 [ ] Streamlit chatbot interface
+☁️ [ ] Deploy to Cloud Run or Vertex AI _(Not yet implemented)_
 
-🧠 [ ] Ollama local support (coming soon)
+🧪 [ ] Streamlit chatbot interface _(Not yet implemented)_
+
+🧠 [ ] Ollama local support _(Coming soon)_
 
 ---
 
