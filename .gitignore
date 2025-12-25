@@ -1,5 +1,6 @@
 # Python
 __pycache__/
+.pytest_cache/
 *.py[cod]
 *.so
 .Python
@@ -21,7 +22,14 @@ notebooks/.ipynb_checkpoints/
 # Data
 /data/processed/*
 /data/raw/*
-/data
+
+# Large PDF files
+data/quantum_docs/**/*.pdf
+
+# Vector databases
+data/vectordb/
+*.chroma/
+chroma.sqlite3
 
 # Logs
 *.log
