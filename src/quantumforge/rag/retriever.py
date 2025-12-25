@@ -10,13 +10,13 @@ VECTORDB_DIR = os.path.join(ROOT_DIR, "data", "vectordb", "chroma")
 
 def load_retriever(file: str = "general/Intro-to-AI-notes.pdf"):
     try:
-        directory_path= os.path.join(DOCS_DIR, file) # TODO: should be set directory in config
-        if not os.path.isfile(directory_path):
-            print(f"File not found at path {directory_path}")
+        file_path= os.path.join(DOCS_DIR, file) # TODO: should be set directory in config
+        if not os.path.isfile(file_path):
+            print(f"File not found at path {file_path}")
             raise FileNotFoundError('File not found')
         
         # Load PDF file
-        load_pdf = PyPDFLoader(directory_path)
+        load_pdf = PyPDFLoader(file_path)
         doc_list = load_pdf.load()
         
         # Convert text to tokens
@@ -36,7 +36,7 @@ def load_retriever(file: str = "general/Intro-to-AI-notes.pdf"):
         # Create a Chroma vector database that keeps all vector in the local directory
         vectorstore = Chroma.from_documents(documents=doc_list_token_splitter,
                                             embedding=embeddings,
-                                            persist_directory=os.path.join(VECTORDB_DIR))
+                                            persist_directory=VECTORDB_DIR)
         
         # Finding the most relevant document to the query
         retriever = vectorstore.as_retriever(search_type="mmr",     # Using Maximal Marginal Relevance algorithm
