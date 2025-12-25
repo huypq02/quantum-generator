@@ -5,12 +5,13 @@ from langchain_community.document_loaders import PyPDFLoader
 import os
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) # This is your Project Root
+# TODO: should be set the below directory in config
 DOCS_DIR = os.path.join(ROOT_DIR, "data", "quantum_docs")
 VECTORDB_DIR = os.path.join(ROOT_DIR, "data", "vectordb", "chroma")
 
 def load_retriever(file: str = "general/Intro-to-AI-notes.pdf"):
     try:
-        file_path= os.path.join(DOCS_DIR, file) # TODO: should be set directory in config
+        file_path = os.path.join(DOCS_DIR, file)
         if not os.path.isfile(file_path):
             print(f"File not found at path {file_path}")
             raise FileNotFoundError('File not found')
