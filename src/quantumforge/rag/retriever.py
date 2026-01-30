@@ -1,15 +1,17 @@
+from .factory import EmbeddingModel
 from langchain_text_splitters import TokenTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import PyPDFLoader
 import os
+from pathlib import Path
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) # This is your Project Root
-# TODO: should be set the below directory in config
+ROOT_DIR = Path(__file__).parents[3]
 DOCS_DIR = os.path.join(ROOT_DIR, "data", "quantum_docs")
 VECTORDB_DIR = os.path.join(ROOT_DIR, "data", "vectordb", "chroma")
+DEFAULT_FILE_PATH = os.path.join("general", "Intro-to-AI-notes.pdf")
+EMBEDDING_TYPE = "minilm-l6"
 
-def load_retriever(file: str = "general/Intro-to-AI-notes.pdf"):
+def load_retriever(file: str = DEFAULT_FILE_PATH):
     try:
         file_path = os.path.join(DOCS_DIR, file)
         if not os.path.isfile(file_path):
@@ -27,9 +29,7 @@ def load_retriever(file: str = "general/Intro-to-AI-notes.pdf"):
         doc_list_token_splitter = token_splitter.split_documents(doc_list)
 
         # Using HuggingFace embeddings
-        embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2"
-        )
+        embeddings = EmbeddingModel.create_embeddings(EMBEDDING_TYPE)
 
         # Check if a directory exists or not then create new
         os.makedirs(VECTORDB_DIR, exist_ok=True)
