@@ -12,8 +12,6 @@ class CodeLlamaModel(BaseModel):
             load_dotenv()
             
             hf_token = os.environ.get("HF_TOKEN")
-            print(hf_token)
-
             quantize = self.config.get("quantize", False)
 
             self.tokenizer = AutoTokenizer.from_pretrained(
