@@ -35,6 +35,11 @@ chroma.sqlite3
 *.log
 logs/
 
+# MLflow
+mlflow.db
+mlruns/
+mlartifacts/
+
 # OS files
 .DS_Store
 Thumbs.db

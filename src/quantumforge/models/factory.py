@@ -1,10 +1,11 @@
 from .deepseek import DeepSeekModel
 from .codegemma import CodeGemmaModel
 from .qwen import QwenModel
+from .codellama import CodeLlamaModel
 
 class ModelFactory:
     @staticmethod
-    def create_model(self, model_type: str, **kwargs):
+    def create_model(model_type: str, **kwargs):
         """Create a specific model."""
         if model_type == "deepseek":
             return DeepSeekModel(**kwargs)
@@ -12,5 +13,7 @@ class ModelFactory:
             return CodeGemmaModel(**kwargs)
         elif model_type == "qwen":
             return QwenModel(**kwargs)
+        elif model_type == "codellama":
+            return CodeLlamaModel(**kwargs)
         else:
             raise ValueError(f"Unknown model type: {model_type}")
