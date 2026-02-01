@@ -57,7 +57,10 @@ class CodeLlamaModel(BaseModel):
         """Generate text from a prompt."""
         try:
             input_text = prompt
-            input_ids = self.tokenizer(input_text, return_tensors="pt")
+            input_ids = self.tokenizer(
+                input_text, 
+                return_tensors="pt"
+            ).to(self.model.device)
 
             outputs = self.model.generate(
                 **input_ids,

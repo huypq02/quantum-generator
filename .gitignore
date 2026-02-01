@@ -40,6 +40,9 @@ mlflow.db
 mlruns/
 mlartifacts/
 
+# Fine-tuning outputs and checkpoints
+output/
+
 # OS files
 .DS_Store
 Thumbs.db
@@ -49,4 +52,4 @@ tests/__pycache__/
 tests/*.log
 
 # Configurations
-config/*
+config/
