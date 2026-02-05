@@ -1,15 +1,22 @@
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-from .base import BaseModel
+from transformers import AutoModelForCausalLM, GemmaTokenizer, BitsAndBytesConfig
+from .base_generator import BaseModel
+import os
+from dotenv import load_dotenv
 
-class QwenModel(BaseModel):
+class CodeGemmaModel(BaseModel):
     def load_model(self) -> None:
-        """Load Qwen model."""
+        """Load CodeGemma model."""
         try:
+            # Load environment variables
+            load_dotenv()
+            
+            hf_token = os.environ.get("HF_TOKEN")
             quantize = self.config.get("quantize", False)
 
-            self.tokenizer = AutoTokenizer.from_pretrained(
-                self.model_name, 
+            self.tokenizer = GemmaTokenizer.from_pretrained(
+                self.model_name,
+                token=hf_token,
                 trust_remote_code=True
             )
 
@@ -18,16 +25,16 @@ class QwenModel(BaseModel):
                     load_in_4bit=True
                 )
                 self.model = AutoModelForCausalLM.from_pretrained(
-                    self.model_name, 
+                    self.model_name,
+                    token=hf_token,
                     device_map="auto",
                     quantization_config=quantization_config
                 )
             else:
                 self.model = AutoModelForCausalLM.from_pretrained(
                     self.model_name, 
-                    trust_remote_code=True, 
-                    dtype="auto",
-                    device_map="auto"
+                    token=hf_token,
+                    trust_remote_code=True
                 )
                 
             self.model.eval()
@@ -42,35 +49,25 @@ class QwenModel(BaseModel):
             max_new_tokens: int = 512, 
             temperature: float = 0.7, 
             top_p: float = 0.9,
-            system_prompt: str = "You are Qwen, created by Alibaba Cloud. You are a helpful assistant.",
             **kwargs
     ) -> str:
         """Generate text from a prompt."""
         try:
-            messages = [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": prompt}
-            ]
-            text = self.tokenizer.apply_chat_template(
-                messages,
-                tokenize=False,
-                add_generation_prompt=True
-            )
+            input_text = prompt
+            input_ids = self.tokenizer(
+                input_text, 
+                return_tensors="pt"
+            ).to(self.model.device)
 
-            model_inputs = self.tokenizer([text], return_tensors="pt").to(self.model.device)
-
-            generated_ids = self.model.generate(
-                **model_inputs,
+            outputs = self.model.generate(
+                **input_ids,
                 max_new_tokens=max_new_tokens,
                 temperature=temperature,
                 top_p=top_p,
                 **kwargs
             )
-            generated_ids = [
-                output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
-            ]
 
-            return self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+            return self.tokenizer.decode(outputs[0])
         
         except Exception as e:
             print(f"An unexpected error occurred while generating text from the model: {e}")

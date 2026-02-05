@@ -1,24 +1,16 @@
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
-from .base import BaseModel
-import os
-from dotenv import load_dotenv
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from .base_generator import BaseModel
 
-class CodeLlamaModel(BaseModel):
+class DeepSeekModel(BaseModel):
     def load_model(self) -> None:
-        """Load CodeLlama model."""
+        """Load DeepSeek model."""
         try:
-            # Load environment variables
-            load_dotenv()
-            
-            hf_token = os.environ.get("HF_TOKEN")
             quantize = self.config.get("quantize", False)
 
             self.tokenizer = AutoTokenizer.from_pretrained(
-                self.model_name,
-                token=hf_token,
+                self.model_name, 
                 trust_remote_code=True
-
             )
 
             if quantize:
@@ -28,24 +20,22 @@ class CodeLlamaModel(BaseModel):
                 self.model = AutoModelForCausalLM.from_pretrained(
                     self.model_name, 
                     device_map="auto",
-                    token=hf_token,
                     quantization_config=quantization_config
                 )
             else:
                 dtype = torch.float16 if torch.cuda.is_available() else torch.float32
                 self.model = AutoModelForCausalLM.from_pretrained(
                     self.model_name, 
+                    trust_remote_code=True, 
                     dtype=dtype,
-                    device_map="auto",
-                    token=hf_token
+                    device_map="auto"
                 )
                 
             self.model.eval()
-        
         except Exception as e:
             print(f"An unexpected error occurred while loading the model: {e}")
             raise
-
+    
     def generate(
             self, 
             prompt: str, 
@@ -56,25 +46,28 @@ class CodeLlamaModel(BaseModel):
     ) -> str:
         """Generate text from a prompt."""
         try:
-            input_text = prompt
-            input_ids = self.tokenizer(
-                input_text, 
+            messages = [
+                {"role": "user", "content": prompt}
+            ]
+            inputs = self.tokenizer.apply_chat_template(
+                messages,
+                add_generation_prompt=True, 
                 return_tensors="pt"
             ).to(self.model.device)
 
             outputs = self.model.generate(
-                **input_ids,
+                inputs,
                 max_new_tokens=max_new_tokens,
                 temperature=temperature,
                 top_p=top_p,
-                do_sample=True,
-                top_k=10,
+                do_sample=False,
+                top_k=50,
                 num_return_sequences=1,
                 eos_token_id=self.tokenizer.eos_token_id,
                 **kwargs
             )
 
-            return self.tokenizer.decode(outputs[0])
+            return self.tokenizer.decode(outputs[0][len(inputs[0]):], skip_special_tokens=True)
         
         except Exception as e:
             print(f"An unexpected error occurred while generating text from the model: {e}")

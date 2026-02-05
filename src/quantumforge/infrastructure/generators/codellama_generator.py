@@ -1,12 +1,12 @@
 import torch
-from transformers import AutoModelForCausalLM, GemmaTokenizer, BitsAndBytesConfig
-from .base import BaseModel
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+from .base_generator import BaseModel
 import os
 from dotenv import load_dotenv
 
-class CodeGemmaModel(BaseModel):
+class CodeLlamaModel(BaseModel):
     def load_model(self) -> None:
-        """Load CodeGemma model."""
+        """Load CodeLlama model."""
         try:
             # Load environment variables
             load_dotenv()
@@ -14,10 +14,11 @@ class CodeGemmaModel(BaseModel):
             hf_token = os.environ.get("HF_TOKEN")
             quantize = self.config.get("quantize", False)
 
-            self.tokenizer = GemmaTokenizer.from_pretrained(
+            self.tokenizer = AutoTokenizer.from_pretrained(
                 self.model_name,
                 token=hf_token,
                 trust_remote_code=True
+
             )
 
             if quantize:
@@ -25,16 +26,18 @@ class CodeGemmaModel(BaseModel):
                     load_in_4bit=True
                 )
                 self.model = AutoModelForCausalLM.from_pretrained(
-                    self.model_name,
-                    token=hf_token,
+                    self.model_name, 
                     device_map="auto",
+                    token=hf_token,
                     quantization_config=quantization_config
                 )
             else:
+                dtype = torch.float16 if torch.cuda.is_available() else torch.float32
                 self.model = AutoModelForCausalLM.from_pretrained(
                     self.model_name, 
-                    token=hf_token,
-                    trust_remote_code=True
+                    dtype=dtype,
+                    device_map="auto",
+                    token=hf_token
                 )
                 
             self.model.eval()
@@ -64,6 +67,10 @@ class CodeGemmaModel(BaseModel):
                 max_new_tokens=max_new_tokens,
                 temperature=temperature,
                 top_p=top_p,
+                do_sample=True,
+                top_k=10,
+                num_return_sequences=1,
+                eos_token_id=self.tokenizer.eos_token_id,
                 **kwargs
             )
 

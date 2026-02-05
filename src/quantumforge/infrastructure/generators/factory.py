@@ -1,7 +1,7 @@
-from .deepseek import DeepSeekModel
-from .codegemma import CodeGemmaModel
-from .qwen import QwenModel
-from .codellama import CodeLlamaModel
+from .deepseek_generator import DeepSeekModel
+from .codegemma_generator import CodeGemmaModel
+from .qwen_generator import QwenModel
+from .codellama_generator import CodeLlamaModel
 
 class ModelFactory:
     @staticmethod
