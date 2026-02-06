@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
+from src.quantumforge.domain.entities import TrainingSession
 
 
 class ITrainer(ABC):
     @abstractmethod
-    def train(self, dataset, config):
+    def train(self, session: TrainingSession):
         """
         Execute fine-tuning training pipeline.
         
-        :param dataset: Training dataset (HuggingFace Dataset, path, or file)
-        :param config: Training configuration
+        :param session: Entities of TrainingSession.
         """
         pass
