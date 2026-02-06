@@ -1,8 +1,10 @@
-from src.quantumforge.models.factory import ModelFactory
-from src.quantumforge.models.deepseek import DeepSeekModel
-from src.quantumforge.models.codegemma import CodeGemmaModel
-from src.quantumforge.models.qwen import QwenModel
-from src.quantumforge.models.codellama import CodeLlamaModel
+from src.quantumforge.infrastructure.generators import (
+    ModelFactory,
+    DeepSeekModel,
+    CodeGemmaModel,
+    QwenModel,
+    CodeLlamaModel
+)
 
 
 def load_model(
