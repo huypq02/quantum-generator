@@ -1,5 +1,3 @@
-from .trainer import LoRATrainer
-from .data_loader import load_data
 from src.quantumforge.infrastructure.generators import (
     DeepSeekModel,
     CodeGemmaModel,
@@ -15,7 +13,7 @@ def evaluate(
     try:
         text_generation = model.generate(user_prompt)
 
-        print(text_generation)
+        return text_generation
     except Exception as e:
         print(f"An unexpected error occurred while evaluating the model: {e}")
         raise RuntimeError("An unexpected error occurred while evaluating the model.")
