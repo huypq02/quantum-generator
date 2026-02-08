@@ -1,15 +1,7 @@
-from src.quantumforge.infrastructure.generators import (
-    DeepSeekModel,
-    CodeGemmaModel,
-    QwenModel,
-    CodeLlamaModel
-)
+from src.quantumforge.infrastructure.generators.base_generator import BaseModel
 
 
-def evaluate(
-        user_prompt: str, 
-        model: DeepSeekModel | CodeGemmaModel | QwenModel | CodeLlamaModel
-):
+def evaluate(user_prompt: str, model: BaseModel):
     try:
         text_generation = model.generate(user_prompt)
 

@@ -40,8 +40,8 @@ mlflow.db
 mlruns/
 mlartifacts/
 
-# Fine-tuning outputs and checkpoints
-output/
+# Fine-tuning checkpoints
+checkpoints/
 
 # OS files
 .DS_Store

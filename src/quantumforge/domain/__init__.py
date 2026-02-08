@@ -1,6 +1,7 @@
 """Domain Layer - Core business logic, entities, and interfaces."""
 from .entities import (
-    TrainingSession
+    TrainingSession,
+    TrainingResult
 )
 from .interfaces import (
     ITrainer,
@@ -9,6 +10,7 @@ from .interfaces import (
 __all__ = [
     # Entities
     "TrainingSession",
+    "TrainingResult",
     # Interfaces (contracts)
     "ITrainer"
 ]
