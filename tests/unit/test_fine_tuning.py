@@ -46,18 +46,33 @@ class TestLoRATrainer():
         trainer.train(session)
         
         assert os.path.exists(os.path.join(
-            session.output_path, session.model_name
+            "models", session.model_name
         ))
 
 
 def test_evaluate():
-    loader = load_model("codegemma","google/codegemma-2b")
-    result = evaluate(
-        user_prompt="implement a 3-qubit phase estimation", 
-        model=PeftModel.from_pretrained(
-            loader.model,
-            os.path.join("models", "google/codegemma-2b")
-        )
+    session = TrainingSession(
+        model_name="google/codegemma-2b",
+        data_id="openclaw_quantum",
+        output_path="./checkpoints",
+        parameter={
+            "model_type":"codegemma",
+            "per_device_train_batch_size":4,
+            "max_steps":100,
+            "lora_task_type":"CAUSAL_LM",
+            "lora_r":64, 
+            "lora_alpha":16, 
+            "lora_dropout":0.1
+        }
     )
-    print(result)
-    assert len(result) > 0
+        
+    trainer = LoRATrainer()
+    result = trainer.train(session)
+    trained_model = trainer.load_model(session, result)
+
+    output = evaluate(
+        user_prompt="implement a 3-qubit phase estimation", 
+        model=trained_model
+    )
+    print(output)
+    assert len(output) > 0

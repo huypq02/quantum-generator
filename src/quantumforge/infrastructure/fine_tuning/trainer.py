@@ -4,11 +4,11 @@ from peft import LoraConfig, PeftModel
 import os
 from .model_loader import load_model
 from .data_loader import load_data
-from src.quantumforge.domain import ITrainer, TrainingSession
+from src.quantumforge.domain import ITrainer, TrainingSession, TrainingResult
 
 
 class LoRATrainer(ITrainer):
-    def train(self, session: TrainingSession):
+    def train(self, session: TrainingSession) -> TrainingResult:
         try:
             loader = load_model(
                 session.parameter.get("model_type"),
@@ -48,11 +48,19 @@ class LoRATrainer(ITrainer):
                 loader.model = PeftModel.from_pretrained(loader.model, model_lora)
                 print(f"Model loaded from {model_lora}")
 
-            print("New model", sft_trainer.model)
-            print("Saved Model", PeftModel.from_pretrained(loader.model, model_lora))
+            return TrainingResult(
+                adapter_path=model_lora,
+                model_name=session.model_name
+            )
 
         except Exception as e:
             print(f"Unexpected error while fine-tuning {e}")
             raise RuntimeError("Unexpected error while fine-tuning")
         
-        return None
+    def load_model(self, session: TrainingSession, result: TrainingResult):
+        loader = load_model(
+            session.parameter.get("model_type"),
+            session.model_name
+        )
+        loader.model = PeftModel.from_pretrained(loader.model, result.adapter_path)
+        return loader
