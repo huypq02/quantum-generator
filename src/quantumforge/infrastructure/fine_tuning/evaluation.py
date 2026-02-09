@@ -1,7 +1,7 @@
-from src.quantumforge.infrastructure.generators.base_generator import BaseModel
+from src.quantumforge.domain.interfaces.generator import IGenerator
 
 
-def evaluate(user_prompt: str, model: BaseModel):
+def evaluate(user_prompt: str, model: IGenerator):
     try:
         text_generation = model.generate(user_prompt)
 

@@ -1,10 +1,11 @@
 import torch
 from transformers import AutoModelForCausalLM, GemmaTokenizer, BitsAndBytesConfig
-from .base_generator import BaseModel
 import os
 from dotenv import load_dotenv
+from src.quantumforge.domain.interfaces.generator import IGenerator
 
-class CodeGemmaModel(BaseModel):
+
+class CodeGemmaModel(IGenerator):
     def load_model(self) -> None:
         """Load CodeGemma model."""
         try:
@@ -41,7 +42,7 @@ class CodeGemmaModel(BaseModel):
         
         except Exception as e:
             print(f"An unexpected error occurred while loading the model: {e}")
-            raise
+            raise RuntimeError("An unexpected error occurred while loading the model")
 
     def generate(
             self, 
@@ -71,4 +72,4 @@ class CodeGemmaModel(BaseModel):
         
         except Exception as e:
             print(f"An unexpected error occurred while generating text from the model: {e}")
-            raise
+            raise RuntimeError("An unexpected error occurred while generating text from the model")
