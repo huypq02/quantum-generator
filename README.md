@@ -1,8 +1,8 @@
-# QuantumForge
+# QuantumGenerator
 
 **Bridging Large Language Models and Quantum Computing**
 
-Tired of writing quantum circuits by hand? QuantumForge automatically generates production-ready quantum code (Qiskit, PennyLane, Cirq, OpenQASM 3) using fine-tuned LLMs with retrieval-augmented generation.
+Tired of writing quantum circuits by hand? QuantumGenerator automatically generates production-ready quantum code (Qiskit, PennyLane, Cirq, OpenQASM 3) using fine-tuned LLMs with retrieval-augmented generation.
 
 The project started as an experiment: _Can we train models to generate quantum algorithms as reliably as they generate classical code?_ The answer is yes—with the right fine-tuning strategy and context retrieval.
 
@@ -156,4 +156,4 @@ Open to contributions. If you've fine-tuned on different datasets or built new m
 
 ## License
 
-MIT
+MIT License. See LICENSE for details.
