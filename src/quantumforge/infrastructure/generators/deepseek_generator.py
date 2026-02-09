@@ -1,8 +1,9 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-from .base_generator import BaseModel
+from src.quantumforge.domain.interfaces.generator import IGenerator
 
-class DeepSeekModel(BaseModel):
+
+class DeepSeekModel(IGenerator):
     def load_model(self) -> None:
         """Load DeepSeek model."""
         try:
@@ -34,7 +35,7 @@ class DeepSeekModel(BaseModel):
             self.model.eval()
         except Exception as e:
             print(f"An unexpected error occurred while loading the model: {e}")
-            raise
+            raise RuntimeError("An unexpected error occurred while loading the model")
     
     def generate(
             self, 
@@ -71,4 +72,4 @@ class DeepSeekModel(BaseModel):
         
         except Exception as e:
             print(f"An unexpected error occurred while generating text from the model: {e}")
-            raise
+            raise RuntimeError("An unexpected error occurred while generating text from the model")

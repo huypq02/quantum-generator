@@ -1,8 +1,9 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-from .base_generator import BaseModel
+from src.quantumforge.domain.interfaces.generator import IGenerator
 
-class QwenModel(BaseModel):
+
+class QwenModel(IGenerator):
     def load_model(self) -> None:
         """Load Qwen model."""
         try:
@@ -34,7 +35,7 @@ class QwenModel(BaseModel):
         
         except Exception as e:
             print(f"An unexpected error occurred while loading the model: {e}")
-            raise
+            raise RuntimeError("An unexpected error occurred while loading the model")
 
     def generate(
             self, 
@@ -74,4 +75,4 @@ class QwenModel(BaseModel):
         
         except Exception as e:
             print(f"An unexpected error occurred while generating text from the model: {e}")
-            raise
+            raise RuntimeError("An unexpected error occurred while generating text from the model")

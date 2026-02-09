@@ -5,6 +5,7 @@ from .entities import (
 )
 from .interfaces import (
     ITrainer,
+    IGenerator
 )
 
 __all__ = [
@@ -12,5 +13,6 @@ __all__ = [
     "TrainingSession",
     "TrainingResult",
     # Interfaces (contracts)
-    "ITrainer"
+    "ITrainer",
+    "IGenerator"
 ]

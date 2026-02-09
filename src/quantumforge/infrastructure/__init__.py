@@ -1,7 +1,6 @@
 """Infrastructure Layer - Concrete implementations of domain interfaces."""
 
 from .generators import (
-    BaseModel,
     DeepSeekModel,
     CodeGemmaModel,
     QwenModel,
@@ -21,7 +20,6 @@ from .fine_tuning import (
 
 __all__ = [
     # Generators
-    "BaseModel",
     "DeepSeekModel",
     "CodeGemmaModel",
     "QwenModel",

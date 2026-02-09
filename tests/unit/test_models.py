@@ -1,29 +1,30 @@
-import unittest
-from src.quantumforge.models.deepseek import DeepSeekModel
-from src.quantumforge.models.codegemma import CodeGemmaModel
-from src.quantumforge.models.qwen import QwenModel
-from src.quantumforge.models.codellama import CodeLlamaModel
+import pytest
+from src.quantumforge.infrastructure.generators import (
+    DeepSeekModel,
+    CodeGemmaModel,
+    QwenModel,
+    CodeLlamaModel
+)
 
-class TestDeepSeekModel(unittest.TestCase):
-    def setUp(self):
+
+class TestDeepSeekModel():
+    @pytest.fixture(autouse=True)
+    def set_up(self):
         """
         Docstring for setting up some essential parameters.
         """
         self.model_name = "deepseek-ai/deepseek-coder-1.3b-instruct"
         self.model_type = DeepSeekModel(self.model_name)
         self.prompt = "Generate OpenQASM 3.0 code implementing Grover's algorithm"
+        return self
     
     def test_load_model(self):
         """
         Docstring for the unit testing of the load DeepSeek model.
         """
         self.model_type.load_model()
-
-        print(f"Model loaded: {self.model_type.model is not None}")
-        print(f"Tokenizer loaded: {self.model_type.tokenizer is not None}")
-
-        self.assertIsNotNone(self.model_type.model, "Model should be loaded")
-        self.assertIsNotNone(self.model_type.tokenizer, "Tokenizer should be loaded")
+        assert self.model_type.model is not None, "Model should be loaded"
+        assert self.model_type.tokenizer is not None, "Tokenizer should be loaded"
 
     def test_generate(self):
         """
@@ -32,11 +33,12 @@ class TestDeepSeekModel(unittest.TestCase):
         self.model_type.load_model()
         text = self.model_type.generate(self.prompt, max_new_tokens=100)
 
-        self.assertIsInstance(text, str, "Generated text should be a string")
-        self.assertGreater(len(text), 0, "Generated text should not be empty")
+        assert isinstance(text, str), "Generated text should be a string"
+        assert len(text) > 0, "Generated text should not be empty"
 
-class TestCodeGemmaModel(unittest.TestCase):
-    def setUp(self):
+class TestCodeGemmaModel():
+    @pytest.fixture(autouse=True)
+    def set_up(self):
         """
         Docstring for setting up some essential parameters.
         """
@@ -49,12 +51,8 @@ class TestCodeGemmaModel(unittest.TestCase):
         Docstring for the unit testing of the load CodeGemma model.
         """
         self.model_type.load_model()
-
-        print(f"Model loaded: {self.model_type.model is not None}")
-        print(f"Tokenizer loaded: {self.model_type.tokenizer is not None}")
-
-        self.assertIsNotNone(self.model_type.model, "Model should be loaded")
-        self.assertIsNotNone(self.model_type.tokenizer, "Tokenizer should be loaded")
+        assert self.model_type.model is not None, "Model should be loaded"
+        assert self.model_type.tokenizer is not None, "Tokenizer should be loaded"
 
     def test_generate(self):
         """
@@ -63,11 +61,12 @@ class TestCodeGemmaModel(unittest.TestCase):
         self.model_type.load_model()
         text = self.model_type.generate(self.prompt, max_new_tokens=100)
 
-        self.assertIsInstance(text, str, "Generated text should be a string")
-        self.assertGreater(len(text), 0, "Generated text should not be empty")
+        assert isinstance(text, str), "Generated text should be a string"
+        assert len(text) > 0, "Generated text should not be empty"
 
-class TestQwenModel(unittest.TestCase):
-    def setUp(self):
+class TestQwenModel():
+    @pytest.fixture(autouse=True)
+    def set_up(self):
         """
         Docstring for setting up some essential parameters.
         """
@@ -80,12 +79,8 @@ class TestQwenModel(unittest.TestCase):
         Docstring for the unit testing of the load Qwen model.
         """
         self.model_type.load_model()
-
-        print(f"Model loaded: {self.model_type.model is not None}")
-        print(f"Tokenizer loaded: {self.model_type.tokenizer is not None}")
-
-        self.assertIsNotNone(self.model_type.model, "Model should be loaded")
-        self.assertIsNotNone(self.model_type.tokenizer, "Tokenizer should be loaded")
+        assert self.model_type.model is not None, "Model should be loaded"
+        assert self.model_type.tokenizer is not None, "Tokenizer should be loaded"
 
     def test_generate(self):
         """
@@ -94,11 +89,12 @@ class TestQwenModel(unittest.TestCase):
         self.model_type.load_model()
         text = self.model_type.generate(self.prompt, max_new_tokens=100)
 
-        self.assertIsInstance(text, str, "Generated text should be a string")
-        self.assertGreater(len(text), 0, "Generated text should not be empty")
+        assert isinstance(text, str), "Generated text should be a string"
+        assert len(text) > 0, "Generated text should not be empty"
 
-class TestCodeLlamaModel(unittest.TestCase):
-    def setUp(self):
+class TestCodeLlamaModel():
+    @pytest.fixture(autouse=True)
+    def set_up(self):
         """
         Docstring for setting up some essential parameters.
         """
@@ -111,12 +107,8 @@ class TestCodeLlamaModel(unittest.TestCase):
         Docstring for the unit testing of the load CodeLlama model.
         """
         self.model_type.load_model()
-
-        print(f"Model loaded: {self.model_type.model is not None}")
-        print(f"Tokenizer loaded: {self.model_type.tokenizer is not None}")
-
-        self.assertIsNotNone(self.model_type.model, "Model should be loaded")
-        self.assertIsNotNone(self.model_type.tokenizer, "Tokenizer should be loaded")
+        assert self.model_type.model is not None, "Model should be loaded"
+        assert self.model_type.tokenizer is not None, "Tokenizer should be loaded"
 
     def test_generate(self):
         """
@@ -125,9 +117,5 @@ class TestCodeLlamaModel(unittest.TestCase):
         self.model_type.load_model()
         text = self.model_type.generate(self.prompt, max_new_tokens=100)
 
-        self.assertIsInstance(text, str, "Generated text should be a string")
-        self.assertGreater(len(text), 0, "Generated text should not be empty")
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert isinstance(text, str), "Generated text should be a string"
+        assert len(text) > 0, "Generated text should not be empty"
