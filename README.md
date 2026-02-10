@@ -17,19 +17,24 @@ Real use case: Convert "implement a 3-qubit phase estimation" into working Qiski
 
 ---
 
-## System Architecture
+## System Architecture (Clean Architecture)
+
+We follow Clean Architecture to keep domain logic isolated and make infra swappable.
 
 ```
-quantumforge/
-├── models/          # Pluggable LLM implementations
-│   ├── factory.py   # Runtime model selection
-│   └── [model implementations]
-├── rag/             # Vector search over quantum docs
-│   └── retriever.py # ChromaDB integration
-└── fine-tuning/     # LoRA training pipeline
+src/quantumforge/
+├── domain/              # Entities + interfaces (pure core)
+│   ├── entities/
+│   └── interfaces/
+├── application/         # Use-cases / orchestration
+├── infrastructure/      # External integrations
+│   ├── generators/      # LLM model adapters
+│   ├── rag/             # Vector search + retriever
+│   └── fine_tuning/     # LoRA training pipeline
+└── interfaces/          # Entry points / adapters
 ```
 
-**Why this structure?** Each component is independently testable and swappable. Adding a new model takes 2-3 hours, not days.
+**Why this structure?** The core stays testable and stable, while models, RAG, and storage can change without touching domain rules.
 
 ---
 
@@ -143,7 +148,7 @@ Things we're working on:
 ## Running Tests
 
 ```bash
-python -m unittest discover -s tests/unit -p "test_*.py"
+pytest -q
 ```
 
 ---
