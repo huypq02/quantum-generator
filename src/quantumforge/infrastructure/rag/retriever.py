@@ -5,7 +5,7 @@ from langchain_community.document_loaders import PyPDFLoader
 import os
 from pathlib import Path
 
-ROOT_DIR = Path(__file__).parents[3]
+ROOT_DIR = Path.cwd()
 DOCS_DIR = os.path.join(ROOT_DIR, "data", "quantum_docs")
 VECTORDB_DIR = os.path.join(ROOT_DIR, "data", "vectordb", "chroma")
 DEFAULT_FILE_PATH = os.path.join("general", "Intro-to-AI-notes.pdf")
@@ -50,4 +50,4 @@ def load_retriever(file: str = DEFAULT_FILE_PATH):
 
     except Exception as e:
         print(f"Error while processing retriever: {e}")
-        raise
+        raise RuntimeError("Error while processing retriever")
