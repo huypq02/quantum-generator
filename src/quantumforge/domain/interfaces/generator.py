@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class IGenerator(ABC):
     def __init__(self, model_name: str, **kwargs):
         """Initialize the model."""
