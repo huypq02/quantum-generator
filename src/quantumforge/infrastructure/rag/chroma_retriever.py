@@ -1,10 +1,10 @@
+from langchain_chroma import Chroma
+import os
 from .embedder import EmbeddingModel
 from src.quantumforge.domain import (
     IRetriever,
     RetrieverConfig
 )
-from langchain_chroma import Chroma
-
 
 class ChromaRetriever(IRetriever):
     def __init__(self, embedding_model: EmbeddingModel):
