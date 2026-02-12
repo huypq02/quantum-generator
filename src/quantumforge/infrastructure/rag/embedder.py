@@ -13,6 +13,11 @@ class EmbeddingModel:
         self.model_type = model_type
     
     def embed(self) -> HuggingFaceEmbeddings:
+        """
+        Choose the embedding model.
+        
+        :return: Embedding model.
+        """
         try:
             return HuggingFaceEmbeddings(model_name=MODEL_NAME[self.model_type])
         
