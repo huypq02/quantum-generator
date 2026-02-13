@@ -2,10 +2,12 @@ from src.quantumforge.domain import (
     IRetriever,
     RetrieverConfig
 )
+from .embedder import EmbeddingModel
+from .chroma_retriever import ChromaRetriever
 
 
 class RAGPipeline:
-    def __init__(self, retriever: IRetriever):
+    def __init__(self, retriever: ChromaRetriever):
         self.retriever = retriever
 
     def get_context(self, query: str, config: RetrieverConfig) -> str:
@@ -16,7 +18,8 @@ class RAGPipeline:
         :param config: Retriever configuration.
         :return: Relevant context.
         """
-        docs = self.retriever.retrieve(query, config)
+        initial_retriever = self.retriever(config.embedder)
+        docs = initial_retriever.retrieve(query, config)
         context_text = "\n\n".join(d.page_content for d in docs)
 
         return context_text
