@@ -8,8 +8,11 @@ from .generators import (
     ModelFactory,
 )
 from .rag import (
-    load_retriever,
+    load_data,
+    chunking,
     EmbeddingModel,
+    ChromaRetriever,
+    RAGPipeline
 )
 from .fine_tuning import (
     LoRATrainer,
@@ -26,8 +29,11 @@ __all__ = [
     "CodeLlamaModel",
     "ModelFactory",
     # RAG
-    "load_retriever",
+    "load_data",
+    "chunking",
     "EmbeddingModel",
+    "ChromaRetriever",
+    "RAGPipeline",
     # Fine-tuning
     "LoRATrainer",
     "load_data",

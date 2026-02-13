@@ -1,11 +1,49 @@
 import os
-from src.quantumforge.infrastructure.rag.retriever import load_retriever
+import pytest
+from quantumforge.domain.entities.retriever_config import RetrieverConfig
+from quantumforge.infrastructure.rag import (
+    load_data,
+    chunking,
+    EmbeddingModel,
+    ChromaRetriever,
+    RAGPipeline
+)
 
 
 class TestRag():
-    def test_load_retriever(self):
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        root_dir = os.getcwd()
+        self.docs_dir = os.path.join(root_dir, "data", "quantum_docs")
+        self.vectordb_dir = os.path.join(root_dir, "data", "vectordb", "chroma")
+        self.default_file_path = os.path.join("general", "Intro-to-AI-notes.pdf")
+        self.embedding_type = "minilm-l6"
+        self.search_type = "mmr"
+        self.search_kwargs = { 'k': 1,'lambda_mult': 0.7 }
+        self.user_input = "What is AI?"
+
+        self.loader = load_data(os.path.join(self.docs_dir + self.default_file_path))
+        self.chunker = chunking(
+            encoding_name="cl100k_base",
+            chunk_size=200,
+            chunk_overlap=40
+        )
+        self.embedder = EmbeddingModel.embed(self.embedding_type)
+
+    def test_load_retriever(self, config: RetrieverConfig):
         """
         Docstring for loading retriever for RAG pipeline.
         """
-        retriever = load_retriever()
-        assert retriever is not None, "Retriever should be loaded."
+        os.makedirs(self.vectordb_dir, exist_ok=True)
+        context = RAGPipeline.get_context(
+            query=self.user_input,
+            config=RetrieverConfig(
+                vectordb_path=self.vectordb_dir, 
+                documents=self.chunker,
+                embedder=self.embedding_type,
+                search_type=self.search_type, 
+                search_kwargs=self.search_kwargs
+            )
+        )
+
+        assert len(context) > 0, "Result should be not empty."
