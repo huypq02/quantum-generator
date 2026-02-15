@@ -1,3 +1,5 @@
+from typing import Any, Sequence
+
 from langchain_text_splitters import TokenTextSplitter
 
 
@@ -5,7 +7,7 @@ def chunking(
         encoding_name: str,
         chunk_size: int,
         chunk_overlap: int,
-        doc_list: str,
+    doc_list: Sequence[Any],
 ):
     """
     Convert text to tokens.

@@ -12,7 +12,8 @@ from .rag import (
     chunking,
     EmbeddingModel,
     ChromaRetriever,
-    RAGPipeline
+    RAGPipeline,
+    RetrieverFactory
 )
 from .fine_tuning import (
     LoRATrainer,
