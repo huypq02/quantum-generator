@@ -1,12 +1,12 @@
 import os
 import pytest
-from quantumforge.domain.entities.retriever_config import RetrieverConfig
-from quantumforge.infrastructure.rag import (
+from src.quantumforge.domain.entities.retriever_config import RetrieverConfig
+from src.quantumforge.infrastructure.rag import (
     load_data,
     chunking,
     EmbeddingModel,
-    ChromaRetriever,
-    RAGPipeline
+    RAGPipeline,
+    RetrieverFactory
 )
 
 
@@ -21,26 +21,30 @@ class TestRag():
         self.search_type = "mmr"
         self.search_kwargs = { 'k': 1,'lambda_mult': 0.7 }
         self.user_input = "What is AI?"
+        self.retriever_type = "chroma"
 
-        self.loader = load_data(os.path.join(self.docs_dir + self.default_file_path))
+        self.loader = load_data(os.path.join(self.docs_dir, self.default_file_path))
         self.chunker = chunking(
             encoding_name="cl100k_base",
             chunk_size=200,
-            chunk_overlap=40
+            chunk_overlap=40,
+            doc_list=self.loader
         )
-        self.embedder = EmbeddingModel.embed(self.embedding_type)
+        self.embedder = EmbeddingModel(self.embedding_type)
 
-    def test_load_retriever(self, config: RetrieverConfig):
+    def test_load_retriever(self):
         """
         Docstring for loading retriever for RAG pipeline.
         """
         os.makedirs(self.vectordb_dir, exist_ok=True)
-        context = RAGPipeline.get_context(
+        pipeline = RAGPipeline(RetrieverFactory())
+        context = pipeline.get_context(
             query=self.user_input,
             config=RetrieverConfig(
+                retriever_type=self.retriever_type,
                 vectordb_path=self.vectordb_dir, 
                 documents=self.chunker,
-                embedder=self.embedding_type,
+                embedder=self.embedder,
                 search_type=self.search_type, 
                 search_kwargs=self.search_kwargs
             )
