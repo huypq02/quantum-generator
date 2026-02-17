@@ -7,7 +7,8 @@ from .entities import (
 from .interfaces import (
     ITrainer,
     IGenerator,
-    IRetriever
+    IRetriever,
+    IReranker
 )
 
 __all__ = [
@@ -18,5 +19,6 @@ __all__ = [
     # Interfaces (contracts)
     "ITrainer",
     "IGenerator",
-    "IRetriever"
+    "IRetriever",
+    "IReranker"
 ]
