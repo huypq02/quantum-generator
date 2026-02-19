@@ -1,11 +1,19 @@
-from src.quantumforge.application.dto.requests import GenerateQuantumCodeRequest
-from src.quantumforge.application.dto.responses import (
+from .requests import (
+    GenerateQuantumCodeRequest,
+    CodeGenerationServiceRequest
+)
+from .responses import (
     GenerateQuantumCodeResponse,
     CodeGenerationServiceResponse
+)
+from .mapper import (
+    DTOMapper
 )
 
 __all__ = [
     "GenerateQuantumCodeRequest",
     "GenerateQuantumCodeResponse",
+    "CodeGenerationServiceRequest",
     "CodeGenerationServiceResponse",
+    "DTOMapper",
 ]

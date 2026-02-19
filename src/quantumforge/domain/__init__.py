@@ -2,13 +2,14 @@
 from .entities import (
     TrainingSession,
     TrainingResult,
-    RetrieverConfig
+    RetrieverConfig,
 )
 from .interfaces import (
     ITrainer,
     IGenerator,
     IRetriever,
-    IReranker
+    IReranker,
+    IClock,
 )
 
 __all__ = [
@@ -20,5 +21,6 @@ __all__ = [
     "ITrainer",
     "IGenerator",
     "IRetriever",
-    "IReranker"
+    "IReranker",
+    "IClock",
 ]

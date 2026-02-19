@@ -7,6 +7,7 @@ from src.quantumforge.application.dto import (
     GenerateQuantumCodeResponse
 )
 
+
 class GenerateQuantumCodeUseCase:
     """
     Application use case
@@ -30,11 +31,17 @@ class GenerateQuantumCodeUseCase:
         if not request.query or not request.query.strip():
             return ValueError("Query cannot be empty.")
         
-        context = self.retriever.retrieve(request.query, request.retriever_config)
-        prompt = self._compose_prompt(request.query, context)
-        result = self.generator.generate(prompt)
-
-        return result
+        try:
+            context = self.retriever.retrieve(request.query, request.retriever_config)
+            prompt = self._compose_prompt(request.query, context)
+            result = self.generator.generate(prompt)
+        except Exception as e:
+            print(f"An unexpected error occurred while generating Quantum code: {e}")
+            raise RuntimeError("An unexpected error occurred while generating Quantum code.")
+        
+        return GenerateQuantumCodeResponse(
+            result=result
+        )
     
     def _compose_prompt(self, query: str, context: str) -> str:
         """

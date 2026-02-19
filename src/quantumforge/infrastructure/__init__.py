@@ -13,7 +13,7 @@ from .rag import (
     EmbeddingModel,
     ChromaRetriever,
     RAGPipeline,
-    RetrieverFactory
+    RetrieverFactory,
 )
 from .fine_tuning import (
     LoRATrainer,

@@ -5,12 +5,14 @@ from .generator import IGenerator
 # from .validator import IValidator
 from .retriever import IRetriever
 from .reranker import IReranker
+from .clock import IClock
 # from .repository import IRepository
-# from .event_bus import IEventBus
+
 
 __all__ = [
     "ITrainer",
     "IGenerator",
     "IRetriever",
-    "IReranker"
+    "IReranker",
+    "IClock",
 ]
