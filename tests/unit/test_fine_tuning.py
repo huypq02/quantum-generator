@@ -1,14 +1,12 @@
 import os
 import pytest
-from peft import PeftModel
-
-from src.quantumforge.infrastructure.fine_tuning import (
+from quantumgenerator.infrastructure.fine_tuning import (
     LoRATrainer,
     load_data,
     load_model,
     evaluate
 )
-from src.quantumforge.domain.entities import (
+from quantumgenerator.domain.entities import (
     TrainingSession
 )
 

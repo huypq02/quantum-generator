@@ -1,7 +1,7 @@
 import os
 import pytest
-from src.quantumforge.domain.entities.retriever_config import RetrieverConfig
-from src.quantumforge.infrastructure.rag import (
+from quantumgenerator.domain.entities.retriever_config import RetrieverConfig
+from quantumgenerator.infrastructure.rag import (
     load_data,
     chunking,
     EmbeddingModel,

@@ -22,7 +22,7 @@ Real use case: Convert "implement a 3-qubit phase estimation" into working Qiski
 We follow Clean Architecture to keep domain logic isolated and make infra swappable.
 
 ```
-src/quantumforge/
+src/quantumgenerator/
 ├── domain/              # Entities + interfaces (pure core)
 │   ├── entities/
 │   └── interfaces/
@@ -57,7 +57,7 @@ HF_TOKEN=hf_xxxxx
 **Basic usage:**
 
 ```python
-from src.quantumforge.models.factory import ModelFactory
+from quantumgenerator.models.factory import ModelFactory
 
 model = ModelFactory.create_model("codegemma", "google/codegemma-2b")
 model.load_model()

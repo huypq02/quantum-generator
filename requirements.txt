@@ -1,4 +1,4 @@
-# Core
+# Core ML/AI Libraries
 torch>=2.1.0        # Use the CUDA build if you have a GPU (pip install torch --index-url https://download.pytorch.org/whl/cu121)
 transformers>=4.40.0
 accelerate>=0.25.0  # Device placement and sharded loading
@@ -6,5 +6,18 @@ accelerate>=0.25.0  # Device placement and sharded loading
 # Quantization (needed if you use quantize=True)
 bitsandbytes>=0.43.0
 
-# Optional but recommended
+# Fine-tuning and Training
+peft>=0.8.0         # Parameter-Efficient Fine-Tuning (LoRA)
+trl>=0.7.0          # Transformer Reinforcement Learning
+
+# RAG (Retrieval-Augmented Generation)
+langchain-chroma>=0.1.0        # Vector database for document retrieval
+sentence-transformers>=2.0.0   # Embeddings and reranking
+
+# Utilities
 einops>=0.6.0
+python-dotenv>=1.0.0
+
+# Development/Testing (optional)
+# pytest>=7.0.0
+# pytest-cov>=4.0.0

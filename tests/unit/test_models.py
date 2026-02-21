@@ -1,5 +1,5 @@
 import pytest
-from src.quantumforge.infrastructure.generators import (
+from quantumgenerator.infrastructure.generators import (
     DeepSeekModel,
     CodeGemmaModel,
     QwenModel,
