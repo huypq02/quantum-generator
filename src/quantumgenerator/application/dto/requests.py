@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 from quantumgenerator.domain.entities.retriever_config import RetrieverConfig
 
 
@@ -6,4 +7,4 @@ from quantumgenerator.domain.entities.retriever_config import RetrieverConfig
 class GenerateQuantumCodeRequest:
     """Request DTO for quantum code generation."""
     query: str
-    retriever_config: RetrieverConfig = None
+    retriever_config: Optional[RetrieverConfig]

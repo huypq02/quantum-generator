@@ -1,4 +1,6 @@
+from fastapi import FastAPI
 from quantumgenerator.interfaces.api.routes.generation import router
 
 
-__all__ = ["router"]
+app = FastAPI()
+app.include_router(router)
