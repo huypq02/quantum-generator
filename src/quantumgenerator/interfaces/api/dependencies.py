@@ -32,19 +32,17 @@ class DIContainer:
             model_name: str = "google/codegemma-2b", 
             retriever_type: str = "chroma"
     ) -> CodeGenerationService:
-        generator = self.get_model_factory.create_model(
+        generator = self.get_model_factory().create_model(
             model_type, 
             model_name=model_name
         )
-        retriever = self.get_retriever_factory.create_retriever(retriever_type)
+        retriever = self.get_retriever_factory().create_retriever(retriever_type)
         clock = self.get_system_clock()
 
         use_case = GenerateQuantumCodeUseCase(generator, retriever)
         return CodeGenerationService(use_case, clock)
 
-_container: Optional[DIContainer] = None
+
+@lru_cache(maxsize=1)
 def create_container() -> DIContainer:
-    global _container
-    if _container is None:
-        _container = DIContainer()
-    return _container
+    return DIContainer()

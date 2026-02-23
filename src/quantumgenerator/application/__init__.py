@@ -3,15 +3,18 @@
 from .dto import (
     GenerateQuantumCodeRequest,
     GenerateQuantumCodeResponse,
-    CodeGenerationServiceResponse,
+)
+from .services import (
+    CodeGenerationService
 )
 from .use_cases import (
     GenerateQuantumCodeUseCase,
 )
 
+
 __all__ = [
     "GenerateQuantumCodeRequest",
     "GenerateQuantumCodeResponse",
-    "CodeGenerationServiceResponse",
+    "CodeGenerationService",
     "GenerateQuantumCodeUseCase",
 ]
