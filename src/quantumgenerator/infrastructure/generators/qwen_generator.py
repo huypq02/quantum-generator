@@ -4,8 +4,16 @@ from quantumgenerator.domain.interfaces.generator import IGenerator
 
 
 class QwenModel(IGenerator):
+    """Qwen model implementation for code generation."""
+
     def load_model(self) -> None:
-        """Load Qwen model."""
+        """
+        Load Qwen model.
+        
+        :return: None
+        :rtype: None
+        :raises RuntimeError: If model loading fails.
+        """
         try:
             quantize = self.config.get("quantize", False)
 
@@ -46,7 +54,24 @@ class QwenModel(IGenerator):
             system_prompt: str = "You are Qwen, created by Alibaba Cloud. You are a helpful assistant.",
             **kwargs
     ) -> str:
-        """Generate text from a prompt."""
+        """
+        Generate text from a prompt.
+        
+        :param prompt: Input prompt for text generation.
+        :type prompt: str
+        :param max_new_tokens: Maximum number of tokens to generate.
+        :type max_new_tokens: int
+        :param temperature: Sampling temperature.
+        :type temperature: float
+        :param top_p: Nucleus sampling parameter.
+        :type top_p: float
+        :param system_prompt: System prompt for the model.
+        :type system_prompt: str
+        :param kwargs: Additional generation parameters.
+        :return: Generated text.
+        :rtype: str
+        :raises RuntimeError: If text generation fails.
+        """
         try:
             messages = [
                 {"role": "system", "content": system_prompt},

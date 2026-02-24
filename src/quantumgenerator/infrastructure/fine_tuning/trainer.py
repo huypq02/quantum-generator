@@ -8,7 +8,18 @@ from quantumgenerator.domain import ITrainer, TrainingSession, TrainingResult
 
 
 class LoRATrainer(ITrainer):
+    """LoRA (Low-Rank Adaptation) trainer for fine-tuning models."""
+
     def train(self, session: TrainingSession) -> TrainingResult:
+        """
+        Execute the LoRA fine-tuning training pipeline.
+        
+        :param session: Training session configuration.
+        :type session: TrainingSession
+        :return: Training result containing adapter path and model name.
+        :rtype: TrainingResult
+        :raises RuntimeError: If fine-tuning fails.
+        """
         try:
             loader = load_model(
                 session.parameter.get("model_type"),
@@ -58,6 +69,15 @@ class LoRATrainer(ITrainer):
             raise RuntimeError("Unexpected error while fine-tuning")
         
     def load_model(self, session: TrainingSession, result: TrainingResult):
+        """
+        Load a trained model with LoRA adapter.
+        
+        :param session: Training session configuration.
+        :type session: TrainingSession
+        :param result: Training result containing adapter information.
+        :type result: TrainingResult
+        :return: Loaded model with adapter.
+        """
         loader = load_model(
             session.parameter.get("model_type"),
             session.model_name

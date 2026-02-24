@@ -10,13 +10,18 @@ def chunking(
     doc_list: Sequence[Any],
 ):
     """
-    Convert text to tokens.
-
-    :param encoding_name: Encoder.
-    :param chunk_size: Chunking size.
-    :param chunk_overlap: Chunking overlap.
-    :param doc_list: Loaded documents.
-    :return: tokenized documents
+    Convert text documents to tokens using a text splitter.
+    
+    :param encoding_name: Name of the token encoder to use.
+    :type encoding_name: str
+    :param chunk_size: Maximum size of each chunk in tokens.
+    :type chunk_size: int
+    :param chunk_overlap: Number of overlapping tokens between chunks.
+    :type chunk_overlap: int
+    :param doc_list: List of loaded documents to chunk.
+    :type doc_list: Sequence[Any]
+    :return: Tokenized and chunked documents.
+    :rtype: list
     """
     token_splitter = TokenTextSplitter(
         encoding_name=encoding_name,

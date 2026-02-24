@@ -7,11 +7,23 @@ from quantumgenerator.application.dto import (
 
 
 class CodeGenerationService:
+    """
+    Service for orchestrating code generation with timing.
+    """
+
     def __init__(
             self, 
             generate_use_case: GenerateQuantumCodeUseCase,
             clock: IClock
     ):
+        """
+        Initialize the code generation service.
+        
+        :param generate_use_case: Use case for quantum code generation.
+        :type generate_use_case: GenerateQuantumCodeUseCase
+        :param clock: Clock for tracking execution time.
+        :type clock: IClock
+        """
         self.use_case = generate_use_case
         self.clock = clock
     

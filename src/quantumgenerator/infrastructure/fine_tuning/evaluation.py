@@ -2,6 +2,17 @@ from quantumgenerator.domain.interfaces.generator import IGenerator
 
 
 def evaluate(user_prompt: str, model: IGenerator):
+    """
+    Evaluate a model by generating text from a user prompt.
+    
+    :param user_prompt: User input prompt for evaluation.
+    :type user_prompt: str
+    :param model: Model instance to evaluate.
+    :type model: IGenerator
+    :return: Generated text output.
+    :rtype: str
+    :raises RuntimeError: If evaluation fails.
+    """
     try:
         text_generation = model.generate(user_prompt)
 

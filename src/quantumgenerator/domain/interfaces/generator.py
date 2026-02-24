@@ -2,8 +2,16 @@ from abc import ABC, abstractmethod
 
 
 class IGenerator(ABC):
+    """Interface for text generation models."""
+
     def __init__(self, model_name: str, **kwargs):
-        """Initialize the model."""
+        """
+        Initialize the model.
+        
+        :param model_name: Name or path of the model.
+        :type model_name: str
+        :param kwargs: Additional configuration parameters.
+        """
         self.model_name = model_name
         self.model = None
         self.tokenizer = None
@@ -11,7 +19,12 @@ class IGenerator(ABC):
 
     @abstractmethod
     def load_model(self) -> None:
-        """Load model from external source."""
+        """
+        Load model from external source.
+        
+        :return: None
+        :rtype: None
+        """
         pass
 
     @abstractmethod
@@ -23,9 +36,30 @@ class IGenerator(ABC):
             top_p: float = 0.9,
             **kwargs
     ) -> str:
-        """Generate text from a prompt."""
+        """
+        Generate text from a prompt.
+        
+        :param prompt: Input prompt for text generation.
+        :type prompt: str
+        :param max_new_tokens: Maximum number of tokens to generate.
+        :type max_new_tokens: int
+        :param temperature: Sampling temperature.
+        :type temperature: float
+        :param top_p: Nucleus sampling parameter.
+        :type top_p: float
+        :param kwargs: Additional generation parameters.
+        :return: Generated text.
+        :rtype: str
+        """
         pass
 
     def tokenize(self, text: str) -> list:
-        """Tokenize input text (optional)."""
+        """
+        Tokenize input text (optional).
+        
+        :param text: Input text to tokenize.
+        :type text: str
+        :return: List of tokens.
+        :rtype: list
+        """
         pass
