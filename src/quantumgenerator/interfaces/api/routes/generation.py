@@ -19,6 +19,12 @@ router = APIRouter(prefix="/api")
 
 @router.get("/health")
 def heath_check():
+    """
+    Health check endpoint.
+    
+    :return: Service health status information.
+    :rtype: dict
+    """
     return {
         "status": HEALTHY_STATUS,
         "service": SERVICE_NAME,
@@ -30,6 +36,16 @@ async def generate(
     request: GenerationRequest, 
     container: Annotated[DIContainer, Depends(create_container)],
 ) -> GenerationResponse:
+    """
+    Generate quantum code based on user query.
+    
+    :param request: Code generation request containing the query.
+    :type request: GenerationRequest
+    :param container: Dependency injection container.
+    :type container: DIContainer
+    :return: Generated code response with execution time.
+    :rtype: GenerationResponse
+    """
     service = container.get_code_generation_service()
     result = service.generate(request)
 

@@ -7,15 +7,27 @@ from quantumgenerator.domain import (
 )
 
 class ChromaRetriever(IRetriever):
+    """Chroma-based document retriever implementation."""
+
     def __init__(self, embedding_model: EmbeddingModel):
+        """
+        Initialize the Chroma retriever.
+        
+        :param embedding_model: Embedding model for vectorization.
+        :type embedding_model: EmbeddingModel
+        """
         self.embedder = embedding_model
 
     def retrieve(self, query: str, config: RetrieverConfig):
         """
         Find closest documents to embedded user query.
         
-        :param config: Retriever configuration.
-        :return: The most relevant document to the query.
+        :param query: User query string.
+        :type query: str
+        :param config: Retriever configuration settings.
+        :type config: RetrieverConfig
+        :return: The most relevant documents to the query.
+        :raises RuntimeError: If retrieval process fails.
         """
         try:
             # Using HuggingFace embeddings

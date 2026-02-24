@@ -10,9 +10,18 @@ from quantumgenerator.application.dto import (
 
 class GenerateQuantumCodeUseCase:
     """
-    Application use case
+    Application use case for generating quantum code.
     """
+
     def __init__(self, generator: IGenerator, retriever: IRetriever):
+        """
+        Initialize the use case with dependencies.
+        
+        :param generator: Code generator instance.
+        :type generator: IGenerator
+        :param retriever: Document retriever instance.
+        :type retriever: IRetriever
+        """
         self.generator = generator
         self.retriever = retriever
     

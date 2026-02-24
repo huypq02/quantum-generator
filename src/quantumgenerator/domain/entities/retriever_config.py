@@ -4,6 +4,22 @@ from typing import Any, Dict, Sequence
 
 @dataclass
 class RetrieverConfig:
+    """
+    Configuration entity for document retrieval.
+    
+    :param retriever_type: Type of retriever to use.
+    :type retriever_type: str
+    :param vectordb_path: Path to the vector database.
+    :type vectordb_path: str
+    :param documents: Sequence of documents to retrieve from.
+    :type documents: Sequence[Any]
+    :param embedder: Embedding model instance.
+    :type embedder: Any
+    :param search_type: Type of search algorithm (default: 'mmr' for Maximal Marginal Relevance).
+    :type search_type: str
+    :param search_kwargs: Additional search parameters.
+    :type search_kwargs: Dict[str, Any]
+    """
     retriever_type: str
     vectordb_path: str
     documents: Sequence[Any]

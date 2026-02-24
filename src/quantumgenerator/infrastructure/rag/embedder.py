@@ -8,14 +8,24 @@ MODEL_NAME = {
 }
 
 class EmbeddingModel:
+    """Embedding model wrapper for document vectorization."""
+
     def __init__(self, model_type: str):
+        """
+        Initialize the embedding model.
+        
+        :param model_type: Type of embedding model to use.
+        :type model_type: str
+        """
         self.model_type = model_type
     
     def embed(self) -> HuggingFaceEmbeddings:
         """
-        Choose the embedding model.
+        Choose and initialize the embedding model.
         
-        :return: Embedding model.
+        :return: Initialized embedding model.
+        :rtype: HuggingFaceEmbeddings
+        :raises RuntimeError: If embedding model initialization fails.
         """
         try:
             return HuggingFaceEmbeddings(model_name=MODEL_NAME[self.model_type])

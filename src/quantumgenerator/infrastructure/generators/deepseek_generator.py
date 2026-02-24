@@ -4,8 +4,16 @@ from quantumgenerator.domain.interfaces.generator import IGenerator
 
 
 class DeepSeekModel(IGenerator):
+    """DeepSeek model implementation for code generation."""
+
     def load_model(self) -> None:
-        """Load DeepSeek model."""
+        """
+        Load DeepSeek model.
+        
+        :return: None
+        :rtype: None
+        :raises RuntimeError: If model loading fails.
+        """
         try:
             quantize = self.config.get("quantize", False)
 
@@ -45,7 +53,22 @@ class DeepSeekModel(IGenerator):
             top_p: float = 0.9,
             **kwargs
     ) -> str:
-        """Generate text from a prompt."""
+        """
+        Generate text from a prompt.
+        
+        :param prompt: Input prompt for text generation.
+        :type prompt: str
+        :param max_new_tokens: Maximum number of tokens to generate.
+        :type max_new_tokens: int
+        :param temperature: Sampling temperature.
+        :type temperature: float
+        :param top_p: Nucleus sampling parameter.
+        :type top_p: float
+        :param kwargs: Additional generation parameters.
+        :return: Generated text.
+        :rtype: str
+        :raises RuntimeError: If text generation fails.
+        """
         try:
             messages = [
                 {"role": "user", "content": prompt}
