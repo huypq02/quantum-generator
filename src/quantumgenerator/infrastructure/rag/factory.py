@@ -13,7 +13,7 @@ class RetrieverFactory:
         :param kwargs: Additional configuration parameters for the retriever.
         :return: Retriever instance.
         :raises ValueError: If retriever type is unknown.
-        """"
+        """
         if retriever_type == "chroma":
             return ChromaRetriever(**kwargs)
         else:
