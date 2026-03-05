@@ -13,9 +13,10 @@ from quantumgenerator.interfaces.api.dependencies import (
     DIContainer,
     create_container,
 )
+from quantumgenerator.application.dto import GenerateQuantumCodeRequest
 
 
-router = APIRouter(prefix="/api")
+router = APIRouter(prefix="/api/v1")
 
 @router.get("/health")
 def heath_check():
@@ -46,7 +47,13 @@ async def generate(
     :return: Generated code response with execution time.
     :rtype: GenerationResponse
     """
+    # Convert API request to application DTO
+    app_request = GenerateQuantumCodeRequest(
+        query=request.query,
+        retriever_config=None  # Use injected default config from use case
+    )
+    
     service = container.get_code_generation_service()
-    result = service.generate(request)
+    result = service.generate(app_request)
 
     return result

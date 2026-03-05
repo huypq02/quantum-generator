@@ -7,6 +7,7 @@ from .retriever import IRetriever
 from .reranker import IReranker
 from .clock import IClock
 # from .repository import IRepository
+from .rag_pipeline import RAGPipeline
 
 
 __all__ = [
@@ -15,4 +16,5 @@ __all__ = [
     "IRetriever",
     "IReranker",
     "IClock",
+    "RAGPipeline",
 ]

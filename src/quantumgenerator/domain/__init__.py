@@ -10,6 +10,7 @@ from .interfaces import (
     IRetriever,
     IReranker,
     IClock,
+    RAGPipeline,
 )
 
 __all__ = [
@@ -23,4 +24,5 @@ __all__ = [
     "IRetriever",
     "IReranker",
     "IClock",
+    "RAGPipeline",
 ]

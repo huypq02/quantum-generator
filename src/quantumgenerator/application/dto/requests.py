@@ -14,4 +14,4 @@ class GenerateQuantumCodeRequest:
     :type retriever_config: Optional[RetrieverConfig]
     """
     query: str
-    retriever_config: Optional[RetrieverConfig]
+    retriever_config: Optional[RetrieverConfig] = None

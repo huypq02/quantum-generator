@@ -80,6 +80,10 @@ class CodeLlamaModel(IGenerator):
         :raises RuntimeError: If text generation fails.
         """
         try:
+            # Auto-load model if not already loaded
+            if self.model is None or self.tokenizer is None:
+                self.load_model()
+            
             input_text = prompt
             input_ids = self.tokenizer(
                 input_text, 
