@@ -89,6 +89,8 @@ class CodeLlamaModel(IGenerator):
                 input_text, 
                 return_tensors="pt"
             ).to(self.model.device)
+            
+            input_length = input_ids.input_ids.shape[-1]
 
             outputs = self.model.generate(
                 **input_ids,
@@ -97,12 +99,15 @@ class CodeLlamaModel(IGenerator):
                 top_p=top_p,
                 do_sample=True,
                 top_k=10,
+                repetition_penalty=1.2,
                 num_return_sequences=1,
                 eos_token_id=self.tokenizer.eos_token_id,
                 **kwargs
             )
 
-            return self.tokenizer.decode(outputs[0])
+            # Decode only the newly generated tokens (exclude input)
+            generated_tokens = outputs[0][input_length:]
+            return self.tokenizer.decode(generated_tokens, skip_special_tokens=True)
         
         except Exception as e:
             print(f"An unexpected error occurred while generating text from the model: {e}")

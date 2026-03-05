@@ -88,8 +88,9 @@ class DeepSeekModel(IGenerator):
                 max_new_tokens=max_new_tokens,
                 temperature=temperature,
                 top_p=top_p,
-                do_sample=False,
+                do_sample=True,
                 top_k=50,
+                repetition_penalty=1.2,
                 num_return_sequences=1,
                 eos_token_id=self.tokenizer.eos_token_id,
                 **kwargs
