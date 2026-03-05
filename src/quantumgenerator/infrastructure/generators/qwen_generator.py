@@ -94,6 +94,8 @@ class QwenModel(IGenerator):
                 max_new_tokens=max_new_tokens,
                 temperature=temperature,
                 top_p=top_p,
+                do_sample=True,
+                repetition_penalty=1.2,
                 **kwargs
             )
             generated_ids = [
