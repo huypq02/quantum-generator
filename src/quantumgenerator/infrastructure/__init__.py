@@ -12,7 +12,7 @@ from .rag import (
     chunking,
     EmbeddingModel,
     ChromaRetriever,
-    RAGPipeline,
+    RAGPipelineImpl,
     RetrieverFactory,
 )
 from .fine_tuning import (
@@ -37,7 +37,7 @@ __all__ = [
     "chunking",
     "EmbeddingModel",
     "ChromaRetriever",
-    "RAGPipeline",
+    "RAGPipelineImpl",
     "RetrieverFactory",
     # Fine-tuning
     "LoRATrainer",

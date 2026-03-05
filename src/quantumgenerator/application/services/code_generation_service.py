@@ -39,7 +39,9 @@ class CodeGenerationService:
         :rtype: GenerateQuantumCodeResponse
         """
         start = self.clock.current_utc_timestamp()
-        response = self.use_case.execute(request)
-        response.execution_time = self.clock.current_utc_timestamp() - start
+        result = self.use_case.execute(request)
         
-        return response
+        return GenerateQuantumCodeResponse(
+            result=result,
+            execution_time=self.clock.current_utc_timestamp() - start
+        )

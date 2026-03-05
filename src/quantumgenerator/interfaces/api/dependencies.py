@@ -1,10 +1,14 @@
 from typing import Optional
 from functools import lru_cache
-from quantumgenerator.infrastructure import (
-    ModelFactory,
-    RetrieverFactory,
-    SystemClock,
+from quantumgenerator.domain import RetrieverConfig
+from quantumgenerator.infrastructure.rag import (
+    RAGPipelineImpl,
+    EmbeddingModel,
+    chunking,
+    load_data,
 )
+from quantumgenerator.infrastructure.generators import ModelFactory
+from quantumgenerator.infrastructure.time import SystemClock
 from quantumgenerator.application import (
     GenerateQuantumCodeUseCase,
     CodeGenerationService,
@@ -27,14 +31,37 @@ class DIContainer:
         return ModelFactory()
     
     @lru_cache(maxsize=1)
-    def get_retriever_factory(self):
+    def get_retriever_config(self):
         """
-        Get or create the retriever factory instance.
+        Get retriever configuration.
         
-        :return: Retriever factory instance.
-        :rtype: RetrieverFactory
+        :return: Retriever configuration.
+        :rtype: RetrieverConfig
         """
-        return RetrieverFactory()
+        # TODO: should apply loading configuration from yaml file
+        return RetrieverConfig(
+            retriever_type="chroma",
+            vectordb_path="data/vectordb/chroma",
+            documents=chunking(
+                encoding_name="cl100k_base",
+                chunk_size=200,
+                chunk_overlap=40,
+                doc_list=load_data("data/quantum_docs/general/Intro-to-AI-notes.pdf")
+            ),  # from request or service
+            embedder=EmbeddingModel("minilm-l6"),   # from container
+            search_type="mmr",
+            search_kwargs={"k": 1, "lambda_mult": 0.7}
+        )
+    
+    @lru_cache(maxsize=1)
+    def get_rag_pipeline_impl(self):
+        """
+        Get or create the RAG Pipeline instance.
+        
+        :return: RAG Pipeline instance.
+        :rtype: RAGPipelineImpl
+        """
+        return RAGPipelineImpl()
     
     @lru_cache(maxsize=1)
     def get_system_clock(self):
@@ -49,8 +76,7 @@ class DIContainer:
     def get_code_generation_service(
             self,
             model_type: str = "codegemma", 
-            model_name: str = "google/codegemma-2b", 
-            retriever_type: str = "chroma"
+            model_name: str = "google/codegemma-2b",
     ) -> CodeGenerationService:
         """
         Get code generation service with configured dependencies.
@@ -68,10 +94,13 @@ class DIContainer:
             model_type, 
             model_name=model_name
         )
-        retriever = self.get_retriever_factory().create_retriever(retriever_type)
+        retriever_config = self.get_retriever_config()
+        rag_pipeline = self.get_rag_pipeline_impl()
         clock = self.get_system_clock()
 
-        use_case = GenerateQuantumCodeUseCase(generator, retriever)
+        use_case = GenerateQuantumCodeUseCase(
+            generator, retriever_config, rag_pipeline
+        )
         return CodeGenerationService(use_case, clock)
 
 

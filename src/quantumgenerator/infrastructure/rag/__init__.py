@@ -4,7 +4,7 @@ from .data_loader import load_data
 from .chunker import chunking
 from .embedder import EmbeddingModel
 from .chroma_retriever import ChromaRetriever
-from .rag_pipeline import RAGPipeline
+from .rag_pipeline import RAGPipelineImpl
 from .factory import RetrieverFactory
 
 
@@ -13,6 +13,6 @@ __all__ = [
     "chunking",
     "EmbeddingModel",
     "ChromaRetriever",
-    "RAGPipeline",
+    "RAGPipelineImpl",
     "RetrieverFactory"
 ]

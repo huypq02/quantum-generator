@@ -5,8 +5,7 @@ from quantumgenerator.infrastructure.rag import (
     load_data,
     chunking,
     EmbeddingModel,
-    RAGPipeline,
-    RetrieverFactory
+    RAGPipelineImpl,
 )
 
 
@@ -37,8 +36,7 @@ class TestRag():
         Docstring for loading retriever for RAG pipeline.
         """
         os.makedirs(self.vectordb_dir, exist_ok=True)
-        pipeline = RAGPipeline(RetrieverFactory())
-        context = pipeline.get_context(
+        context = RAGPipelineImpl().get_context(
             query=self.user_input,
             config=RetrieverConfig(
                 retriever_type=self.retriever_type,

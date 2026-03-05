@@ -1,6 +1,8 @@
-from quantumgenerator.domain.interfaces import (
+from quantumgenerator.domain import (
     IGenerator,
-    IRetriever
+    RAGPipeline,
+    RetrieverConfig,
+    IClock
 )
 from quantumgenerator.application.dto import (
     GenerateQuantumCodeRequest,
@@ -13,7 +15,12 @@ class GenerateQuantumCodeUseCase:
     Application use case for generating quantum code.
     """
 
-    def __init__(self, generator: IGenerator, retriever: IRetriever):
+    def __init__(
+            self, 
+            generator: IGenerator,
+            retriever_config: RetrieverConfig,
+            rag_pipeline: RAGPipeline,
+    ):
         """
         Initialize the use case with dependencies.
         
@@ -23,34 +30,37 @@ class GenerateQuantumCodeUseCase:
         :type retriever: IRetriever
         """
         self.generator = generator
-        self.retriever = retriever
+        self.retriever_config = retriever_config
+        self.rag_pipeline = rag_pipeline
     
     def execute(
             self, 
-            request: GenerateQuantumCodeRequest
-    ) -> GenerateQuantumCodeResponse:
+            request: GenerateQuantumCodeRequest,
+    ) -> str:
         """
         Execute LLMs for generation.
         
         :param request: Request DTO for quantum code generation
         :type request: GenerateQuantumCodeRequest
-        :return: Response DTO for quantum code generation
-        :rtype: GenerateQuantumCodeResponse
+        :return: Result for quantum code generation
+        :rtype: str
+        :raises ValueError: If query is empty.
+        :raises RuntimeError: If generation fails.
         """
         if not request.query or not request.query.strip():
-            return ValueError("Query cannot be empty.")
+            raise ValueError("Query cannot be empty.")
         
         try:
-            context = self.retriever.retrieve(request.query, request.retriever_config)
+            config = request.retriever_config or self.retriever_config
+            context = self.rag_pipeline.get_context(
+                query=request.query,
+                config=config
+            )
             prompt = self._compose_prompt(request.query, context)
-            result = self.generator.generate(prompt)
+            return self.generator.generate(prompt)
         except Exception as e:
             print(f"An unexpected error occurred while generating Quantum code: {e}")
             raise RuntimeError("An unexpected error occurred while generating Quantum code.")
-        
-        return GenerateQuantumCodeResponse(
-            result=result
-        )
     
     def _compose_prompt(self, query: str, context: str) -> str:
         """
