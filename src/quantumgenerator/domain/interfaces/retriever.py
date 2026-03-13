@@ -6,7 +6,17 @@ class IRetriever(ABC):
     """Interface for document retrieval."""
 
     @abstractmethod
-    def retrieve(self, query: str, config: RetrieverConfig):
+    def index_documents(self, config: RetrieverConfig) -> None:
+        """
+        Build or refresh the vector index using provided documents.
+
+        :param config: Retriever configuration settings.
+        :type config: RetrieverConfig
+        """
+        pass
+
+    @abstractmethod
+    def retrieve_context(self, query: str, config: RetrieverConfig):
         """
         Retrieve relevant documents based on query.
         

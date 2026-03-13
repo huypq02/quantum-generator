@@ -36,16 +36,19 @@ class TestRag():
         Docstring for loading retriever for RAG pipeline.
         """
         os.makedirs(self.vectordb_dir, exist_ok=True)
-        context = RAGPipelineImpl().get_context(
+        config = RetrieverConfig(
+            retriever_type=self.retriever_type,
+            vectordb_path=self.vectordb_dir,
+            documents=self.chunker,
+            embedder=self.embedder,
+            search_type=self.search_type,
+            search_kwargs=self.search_kwargs,
+        )
+        pipeline = RAGPipelineImpl()
+        pipeline.index_documents(config)
+        context = pipeline.retrieve_context(
             query=self.user_input,
-            config=RetrieverConfig(
-                retriever_type=self.retriever_type,
-                vectordb_path=self.vectordb_dir, 
-                documents=self.chunker,
-                embedder=self.embedder,
-                search_type=self.search_type, 
-                search_kwargs=self.search_kwargs
-            )
+            config=config,
         )
 
         assert len(context) > 0, "Result should be not empty."
