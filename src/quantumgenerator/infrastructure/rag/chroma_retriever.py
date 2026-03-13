@@ -18,7 +18,28 @@ class ChromaRetriever(IRetriever):
         """
         self.embedder = embedding_model
 
-    def retrieve(self, query: str, config: RetrieverConfig):
+    def index_documents(self, config: RetrieverConfig) -> None:
+        """
+        Build or refresh a persisted Chroma index from source documents.
+
+        :param config: Retriever configuration settings.
+        :type config: RetrieverConfig
+        :raises RuntimeError: If indexing process fails.
+        """
+        try:
+            embeddings = self.embedder.embed()
+            os.makedirs(config.vectordb_path, exist_ok=True)
+
+            Chroma.from_documents(
+                documents=config.documents,
+                embedding=embeddings,
+                persist_directory=config.vectordb_path,
+            )
+        except Exception as e:
+            print(f"Error while indexing documents: {e}")
+            raise RuntimeError("Error while indexing documents")
+
+    def retrieve_context(self, query: str, config: RetrieverConfig):
         """
         Find closest documents to embedded user query.
         
@@ -30,17 +51,12 @@ class ChromaRetriever(IRetriever):
         :raises RuntimeError: If retrieval process fails.
         """
         try:
-            # Using HuggingFace embeddings
             embeddings = self.embedder.embed()
 
-            # Check if a directory exists or not then create new
-            os.makedirs(config.vectordb_path, exist_ok=True)
-
-            # Create a Chroma vector database that keeps all vector in the local directory
-            vectorstore = Chroma.from_documents(
-                documents=config.documents,
-                embedding=embeddings,
-                persist_directory=config.vectordb_path
+            # Query against an existing persisted index.
+            vectorstore = Chroma(
+                persist_directory=config.vectordb_path,
+                embedding_function=embeddings,
             )
             
             # Finding the most relevant document to the query
@@ -52,5 +68,5 @@ class ChromaRetriever(IRetriever):
             return retriever.invoke(query)
 
         except Exception as e:
-            print(f"Error while processing retriever: {e}")
-            raise RuntimeError("Error while processing retriever")
+            print(f"Error while retrieving context: {e}")
+            raise RuntimeError("Error while retrieving context")
