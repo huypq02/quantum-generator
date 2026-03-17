@@ -6,14 +6,8 @@ class IReranker(ABC):
     """Interface for document reranking."""
 
     @abstractmethod
-    def rank(self, query: str, config: RetrieverConfig):
+    def rank(self, kwargs):
         """
         Rerank documents by relevance to query.
-        
-        :param query: User query string.
-        :type query: str
-        :param config: Retriever configuration settings.
-        :type config: RetrieverConfig
-        :return: Reranked documents.
         """
         pass

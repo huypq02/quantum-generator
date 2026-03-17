@@ -14,7 +14,7 @@ class RAGPipeline(ABC):
         pass
 
     @abstractmethod
-    def retrieve_context(self, query: str, config: RetrieverConfig) -> str:
+    def compression_retriever(self, query: str, config: RetrieverConfig) -> str:
         """
         Retrieve relevant context for a given query.
         

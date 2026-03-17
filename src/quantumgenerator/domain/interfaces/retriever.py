@@ -16,12 +16,10 @@ class IRetriever(ABC):
         pass
 
     @abstractmethod
-    def retrieve_context(self, query: str, config: RetrieverConfig):
+    def retrieve_context(self, config: RetrieverConfig):
         """
         Retrieve relevant documents based on query.
         
-        :param query: User query string.
-        :type query: str
         :param config: Retriever configuration settings.
         :type config: RetrieverConfig
         :return: Retrieved documents.

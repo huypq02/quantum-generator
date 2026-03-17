@@ -31,3 +31,10 @@ class RetrieverConfig:
             "lambda_mult": 0.7 # 70% focus on relevance, 30% on diversity
         }
     )
+    rerank_model: str = "maidalun1020/bce-reranker-base_v1"
+    rerank_kwargs: Dict[str, Any] = field(
+        default_factory=lambda:{
+            'top_n': 5,
+            'device': 'cuda:0'
+        }
+    )
