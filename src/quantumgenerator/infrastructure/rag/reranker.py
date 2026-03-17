@@ -1,33 +1,33 @@
-from sentence_transformers import CrossEncoder
+from BCEmbedding.tools.langchain import BCERerank
 from quantumgenerator.domain.interfaces import IReranker
 
 
-class CrossEncoderReranker(IReranker):
-    """Reranker implementation using a SentenceTransformers CrossEncoder model."""
+class BCEReranker(IReranker):
+    """Factory-style adapter for creating a BCERerank instance."""
 
     def __init__(self, model_name: str):
         """
-        Initialize the cross-encoder reranker.
+        Initialize the reranker adapter.
         
-        :param model_name: Pretrained CrossEncoder model name or local path.
+        :param model_name: Pretrained BCEmbedding reranker model name or local path.
         :type model_name: str
         """
-        self.reranker = CrossEncoder(model_name)
+        self.model_name = model_name
     
-    def rank(self, query: str, docs: list[str]) -> list[str]:
+    def rank(self, kwargs):
         """
-        Apply reranker to rank and sort documents by relevance.
+        Create and return a configured ``BCERerank`` instance.
         
-        :param query: User input query.
-        :type query: str
-        :param docs: Retrieved documents to rerank.
-        :type docs: list[str]
-        :return: Documents sorted by relevance score in descending order.
-        :rtype: list[str]
-        """
-        pairs = [(query, doc) for doc in docs]
-        scores = self.reranker.predict(pairs)
+        This method does not execute reranking directly; it instantiates
+        the underlying reranker object configured with ``self.model_name``.
 
-        results = list(zip(scores, docs))
-        results.sort(key=lambda x: x[0], reverse=True)
-        return [doc for _, doc in results]
+        :return: Initialized BCERerank object.
+        :rtype: BCERerank
+        :raises RuntimeError: If BCERerank initialization fails.
+        """
+        try:
+            return BCERerank(model=self.model_name, **kwargs)
+
+        except Exception as e:
+            print(f"Unexpected error while reranking model: {e}")
+            raise RuntimeError("Unexpected error while reranking model")

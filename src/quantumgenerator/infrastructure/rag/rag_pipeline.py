@@ -1,5 +1,7 @@
+from langchain.retrievers import ContextualCompressionRetriever
 from quantumgenerator.domain import RetrieverConfig, RAGPipeline
 from .factory import RetrieverFactory
+from .reranker import BCEReranker
 
 
 class RAGPipelineImpl(RAGPipeline):
@@ -18,7 +20,7 @@ class RAGPipelineImpl(RAGPipeline):
         )
         retriever.index_documents(config)
     
-    def retrieve_context(self, query: str, config: RetrieverConfig) -> str:
+    def compression_retriever(self, query: str, config: RetrieverConfig) -> str:
         """
         Retrieve relevant context for a given query.
         
@@ -29,11 +31,17 @@ class RAGPipelineImpl(RAGPipeline):
         :return: Retrieved context as a single string.
         :rtype: str
         """
-        retriever = RetrieverFactory().create_retriever(
+        retriever_type = RetrieverFactory().create_retriever(
             config.retriever_type, 
             embedding_model=config.embedder
         )
-        docs = retriever.retrieve_context(query, config)
-        context_text = "\n\n".join(d.page_content for d in docs)
+        retriever = retriever_type.retrieve_context(config)
 
+        reranker = BCEReranker(config.rerank_model).rank(config.rerank_kwargs)
+
+        compression_retriever = ContextualCompressionRetriever(
+            base_compressor=reranker, base_retriever=retriever
+        )
+        docs = compression_retriever.get_relevant_documents(query)
+        context_text = "\n\n".join(d.page_content for d in docs)
         return context_text

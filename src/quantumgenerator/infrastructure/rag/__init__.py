@@ -6,7 +6,7 @@ from .embedder import EmbeddingModel
 from .chroma_retriever import ChromaRetriever
 from .rag_pipeline import RAGPipelineImpl
 from .factory import RetrieverFactory
-
+from .reranker import BCEReranker
 
 __all__ = [
     "load_data",
@@ -14,5 +14,6 @@ __all__ = [
     "EmbeddingModel",
     "ChromaRetriever",
     "RAGPipelineImpl",
-    "RetrieverFactory"
+    "RetrieverFactory",
+    "BCEReranker",
 ]

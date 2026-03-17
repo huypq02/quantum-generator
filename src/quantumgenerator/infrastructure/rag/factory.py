@@ -1,4 +1,5 @@
 from .chroma_retriever import ChromaRetriever
+from .faiss_retriever import FAISSRetriever
 
 
 class RetrieverFactory:
@@ -8,7 +9,7 @@ class RetrieverFactory:
         """
         Create a specific retriever instance.
         
-        :param retriever_type: Type of retriever to create (e.g., 'chroma').
+        :param retriever_type: Type of retriever to create (e.g., 'chroma', 'faiss').
         :type retriever_type: str
         :param kwargs: Additional configuration parameters for the retriever.
         :return: Retriever instance.
@@ -16,5 +17,7 @@ class RetrieverFactory:
         """
         if retriever_type == "chroma":
             return ChromaRetriever(**kwargs)
+        elif retriever_type == "faiss":
+            return FAISSRetriever(**kwargs)
         else:
             raise ValueError(f"Unknown retriever type: {retriever_type}")

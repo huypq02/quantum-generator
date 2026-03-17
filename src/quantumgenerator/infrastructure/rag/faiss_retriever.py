@@ -1,4 +1,4 @@
-from langchain_chroma import Chroma
+from langchain_community.vectorstores import FAISS
 import os
 from .embedder import EmbeddingModel
 from quantumgenerator.domain import (
@@ -6,12 +6,12 @@ from quantumgenerator.domain import (
     RetrieverConfig
 )
 
-class ChromaRetriever(IRetriever):
-    """Chroma-based document retriever implementation."""
+class FAISSRetriever(IRetriever):
+    """FAISS-based document retriever implementation."""
 
     def __init__(self, embedding_model: EmbeddingModel):
         """
-        Initialize the Chroma retriever.
+        Initialize the FAISS retriever.
         
         :param embedding_model: Embedding model for vectorization.
         :type embedding_model: EmbeddingModel
@@ -20,7 +20,7 @@ class ChromaRetriever(IRetriever):
 
     def index_documents(self, config: RetrieverConfig) -> None:
         """
-        Build or refresh a persisted Chroma index from source documents.
+        Build a FAISS index from source documents.
 
         :param config: Retriever configuration settings.
         :type config: RetrieverConfig
@@ -30,7 +30,7 @@ class ChromaRetriever(IRetriever):
             embeddings = self.embedder.embed()
             os.makedirs(config.vectordb_path, exist_ok=True)
 
-            Chroma.from_documents(
+            FAISS.from_documents(
                 documents=config.documents,
                 embedding=embeddings,
                 persist_directory=config.vectordb_path,
@@ -41,18 +41,19 @@ class ChromaRetriever(IRetriever):
 
     def retrieve_context(self, config: RetrieverConfig):
         """
-        Find closest documents to embedded user query.
-        
+        Retrieve the most relevant documents for a user query.
+
         :param config: Retriever configuration settings.
         :type config: RetrieverConfig
-        :return: The most relevant documents to the query.
+        :return: Documents most relevant to the query.
+        :rtype: list
         :raises RuntimeError: If retrieval process fails.
         """
         try:
             embeddings = self.embedder.embed()
 
             # Query against an existing persisted index.
-            vectorstore = Chroma(
+            vectorstore = FAISS(
                 persist_directory=config.vectordb_path,
                 embedding_function=embeddings,
             )
@@ -62,7 +63,6 @@ class ChromaRetriever(IRetriever):
                 search_type=config.search_type,
                 search_kwargs=config.search_kwargs
             )
-            
             return retriever
 
         except Exception as e:
