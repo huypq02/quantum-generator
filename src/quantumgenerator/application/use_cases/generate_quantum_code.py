@@ -52,7 +52,7 @@ class GenerateQuantumCodeUseCase:
         
         try:
             config = request.retriever_config or self.retriever_config
-            context = self.rag_pipeline.retrieve_context(
+            context = self.rag_pipeline.compression_retriever(
                 query=request.query,
                 config=config
             )
