@@ -4,10 +4,18 @@ from quantumgenerator.domain.entities.retriever_config import RetrieverConfig
 
 class IReranker(ABC):
     """Interface for document reranking."""
-
     @abstractmethod
-    def rank(self, kwargs):
+    def __init__(self, config: RetrieverConfig):
         """
-        Rerank documents by relevance to query.
+        Initialize the reranker adapter.
+
+        :param config: Retriever configuration containing reranker settings.
+        :type config: RetrieverConfig
+        """
+    
+    @abstractmethod
+    def rank(self):
+        """
+        Build a configured reranker instance.
         """
         pass

@@ -1,6 +1,6 @@
 # Core ML/AI Libraries
 torch>=2.1.0        # Use the CUDA build if you have a GPU (pip install torch --index-url https://download.pytorch.org/whl/cu121)
-transformers>=4.35.0,<4.37.0
+transformers>=4.38.0,<5.0.0
 accelerate>=0.25.0  # Device placement and sharded loading
 
 # Quantization (needed if you use quantize=True)
@@ -8,13 +8,13 @@ bitsandbytes>=0.43.0
 
 # Fine-tuning and Training
 peft>=0.8.0         # Parameter-Efficient Fine-Tuning (LoRA)
-trl>=0.7.0          # Transformer Reinforcement Learning
+trl>=0.7.0,<0.8.0   # Transformer Reinforcement Learning
 
 # RAG (Retrieval-Augmented Generation)
 langchain>=0.2.0,<0.3.0              # Core LangChain components (retrievers, compressors)
 langchain-community>=0.2.0,<0.3.0    # Community integrations (FAISS vectorstore)
 langchain-chroma>=0.1.0,<0.2.0        # Vector database for document retrieval
-BCEmbedding>=0.1.5            # BCE reranker integration
+sentence-transformers>=2.7.0          # Cross-encoder reranker backend
 
 # Utilities
 einops>=0.6.0

@@ -46,7 +46,7 @@ class TestRag():
         )
         pipeline = RAGPipelineImpl()
         pipeline.index_documents(config)
-        context = pipeline.retrieve_context(
+        context = pipeline.compression_retriever(
             query=self.user_input,
             config=config,
         )
