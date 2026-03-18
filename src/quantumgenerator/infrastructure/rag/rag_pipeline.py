@@ -1,7 +1,7 @@
-from langchain.retrievers import ContextualCompressionRetriever
+from langchain_classic.retrievers import ContextualCompressionRetriever
 from quantumgenerator.domain import RetrieverConfig, RAGPipeline
 from .factory import RetrieverFactory
-from .reranker import BCEReranker
+from .reranker import CrossEncoderReranker
 
 
 class RAGPipelineImpl(RAGPipeline):
@@ -37,11 +37,11 @@ class RAGPipelineImpl(RAGPipeline):
         )
         retriever = retriever_type.retrieve_context(config)
 
-        reranker = BCEReranker(config.rerank_model).rank(config.rerank_kwargs)
+        reranker = CrossEncoderReranker(config).rank()
 
         compression_retriever = ContextualCompressionRetriever(
             base_compressor=reranker, base_retriever=retriever
         )
-        docs = compression_retriever.get_relevant_documents(query)
+        docs = compression_retriever.invoke(query)
         context_text = "\n\n".join(d.page_content for d in docs)
         return context_text
