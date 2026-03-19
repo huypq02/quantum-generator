@@ -1,5 +1,6 @@
 from langchain_chroma import Chroma
 import os
+import chromadb
 from .embedder import EmbeddingModel
 from quantumgenerator.domain import (
     IRetriever,
@@ -18,6 +19,17 @@ class ChromaRetriever(IRetriever):
         """
         self.embedder = embedding_model
 
+    def _create_client(self, config: RetrieverConfig):
+        """Create a remote Chroma client when configured for remote mode."""
+        if config.host is None or config.port is None:
+            raise ValueError("Remote Chroma requires both host and port")
+
+        return chromadb.HttpClient(
+            host=config.host,
+            port=config.port,
+            ssl=config.ssl,
+        )
+
     def index_documents(self, config: RetrieverConfig) -> None:
         """
         Build or refresh a persisted Chroma index from source documents.
@@ -28,13 +40,23 @@ class ChromaRetriever(IRetriever):
         """
         try:
             embeddings = self.embedder.embed()
-            os.makedirs(config.vectordb_path, exist_ok=True)
+            if config.vectordb_mode == "local":
+                os.makedirs(config.vectordb_path, exist_ok=True)
 
-            Chroma.from_documents(
-                documents=config.documents,
-                embedding=embeddings,
-                persist_directory=config.vectordb_path,
-            )
+                Chroma.from_documents(
+                    documents=config.documents,
+                    embedding=embeddings,
+                    persist_directory=config.vectordb_path,
+                    collection_name=config.collection_name,
+                )
+            else:
+                client = self._create_client(config)
+                Chroma.from_documents(
+                    documents=config.documents,
+                    embedding=embeddings,
+                    client=client,
+                    collection_name=config.collection_name,
+                )
         except Exception as e:
             print(f"Error while indexing documents: {e}")
             raise RuntimeError("Error while indexing documents")
@@ -51,11 +73,20 @@ class ChromaRetriever(IRetriever):
         try:
             embeddings = self.embedder.embed()
 
-            # Query against an existing persisted index.
-            vectorstore = Chroma(
-                persist_directory=config.vectordb_path,
-                embedding_function=embeddings,
-            )
+            if config.vectordb_mode == "local":
+                # Query against an existing persisted index.
+                vectorstore = Chroma(
+                    persist_directory=config.vectordb_path,
+                    embedding_function=embeddings,
+                    collection_name=config.collection_name,
+                )
+            else:
+                client = self._create_client(config)
+                vectorstore = Chroma(
+                    client=client,
+                    embedding_function=embeddings,
+                    collection_name=config.collection_name,
+                )
             
             # Finding the most relevant document to the query
             retriever = vectorstore.as_retriever(
