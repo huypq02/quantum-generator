@@ -30,11 +30,11 @@ class FAISSRetriever(IRetriever):
             embeddings = self.embedder.embed()
             os.makedirs(config.vectordb_path, exist_ok=True)
 
-            FAISS.from_documents(
+            vectorstore = FAISS.from_documents(
                 documents=config.documents,
                 embedding=embeddings,
-                persist_directory=config.vectordb_path,
             )
+            vectorstore.save_local(config.vectordb_path)
         except Exception as e:
             print(f"Error while indexing documents: {e}")
             raise RuntimeError("Error while indexing documents")
@@ -52,10 +52,11 @@ class FAISSRetriever(IRetriever):
         try:
             embeddings = self.embedder.embed()
 
-            # Query against an existing persisted index.
-            vectorstore = FAISS(
-                persist_directory=config.vectordb_path,
-                embedding_function=embeddings,
+            # Load an existing persisted index.
+            vectorstore = FAISS.load_local(
+                folder_path=config.vectordb_path,
+                embeddings=embeddings,
+                allow_dangerous_deserialization=True,
             )
             
             # Finding the most relevant document to the query
