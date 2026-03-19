@@ -14,13 +14,13 @@ class TestRag():
     def setup(self):
         root_dir = os.getcwd()
         self.docs_dir = os.path.join(root_dir, "data", "quantum_docs")
-        self.vectordb_dir = os.path.join(root_dir, "data", "vectordb", "chroma")
+        self.vectordb_dir = os.path.join(root_dir, "data", "vectordb", "faiss")
         self.default_file_path = os.path.join("general", "Intro-to-AI-notes.pdf")
         self.embedding_type = "minilm-l6"
         self.search_type = "mmr"
         self.search_kwargs = { 'k': 1,'lambda_mult': 0.7 }
         self.user_input = "What is AI?"
-        self.retriever_type = "chroma"
+        self.retriever_type = "faiss"
 
         self.loader = load_data(os.path.join(self.docs_dir, self.default_file_path))
         self.chunker = chunking(
