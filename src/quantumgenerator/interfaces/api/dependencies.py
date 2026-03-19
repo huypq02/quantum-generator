@@ -49,6 +49,8 @@ class DIContainer:
                 doc_list=load_data("data/quantum_docs/general/Intro-to-AI-notes.pdf")
             ),  # from request or service
             embedder=EmbeddingModel("minilm-l6"),   # from container
+            vectordb_mode="local",
+            collection_name="quantum_docs",
             search_type="mmr",
             search_kwargs={"k": 1, "lambda_mult": 0.7}
         )

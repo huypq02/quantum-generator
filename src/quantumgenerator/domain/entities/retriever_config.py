@@ -25,6 +25,11 @@ class RetrieverConfig:
     documents: Sequence[Any]
     embedder: Any
     search_type: str = "mmr"  # Using Maximal Marginal Relevance algorithm
+    vectordb_mode: str = "local"
+    collection_name: str = "quantum_docs"
+    host: str | None = None
+    port: int | None = None
+    ssl: bool = False
     search_kwargs: Dict[str, Any] = field(
         default_factory=lambda: {
             "k": 1,            # Top 1 most relevant document
