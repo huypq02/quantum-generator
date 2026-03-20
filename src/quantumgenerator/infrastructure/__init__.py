@@ -24,6 +24,7 @@ from .fine_tuning import (
 from .time import (
     SystemClock
 )
+from .logger import setup_logging
 
 __all__ = [
     # Generators
@@ -46,4 +47,6 @@ __all__ = [
     "evaluate",
     # Time
     "SystemClock",
+    # Logging
+    "setup_logging"
 ]

@@ -32,10 +32,10 @@ class RetrieverConfig:
     ssl: bool = False
     search_kwargs: Dict[str, Any] = field(
         default_factory=lambda: {
-            "k": 1,            # Top 1 most relevant document
+            "k": 10,           # Top 10 most relevant document
             "lambda_mult": 0.7 # 70% focus on relevance, 30% on diversity
         }
     )
     rerank_model: str = "BAAI/bge-reranker-base"
-    rerank_top_n: int = 5
+    rerank_top_n: int = 3
     rerank_device: str | None = None
