@@ -1,5 +1,5 @@
 """API-specific constants for the REST interface."""
 
 HEALTHY_STATUS = "healthy"
-API_VERSION = "v1"
+VERSION = "0.1.0"
 SERVICE_NAME = "QuantumGenerator"

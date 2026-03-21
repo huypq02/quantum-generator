@@ -53,3 +53,4 @@ tests/*.log
 
 # Configurations
 config/
+!src/quantumgenerator/infrastructure/config

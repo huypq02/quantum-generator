@@ -26,7 +26,7 @@ from quantumgenerator.application.dto import (
 # Interfaces (API) layer
 from quantumgenerator.interfaces import (
     HEALTHY_STATUS,
-    API_VERSION,
+    VERSION,
     SERVICE_NAME,
 )
 from quantumgenerator.interfaces.api import (
@@ -61,7 +61,7 @@ __all__ = [
     "GenerateQuantumCodeResponse",
     # Interfaces
     "HEALTHY_STATUS",
-    "API_VERSION",
+    "VERSION",
     "SERVICE_NAME",
     "GenerationRequest",
     "GenerationResponse",

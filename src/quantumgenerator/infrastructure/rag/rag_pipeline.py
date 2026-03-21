@@ -1,9 +1,8 @@
-from langchain_classic.retrievers import ContextualCompressionRetriever
+from langchain.retrievers import ContextualCompressionRetriever
 from quantumgenerator.domain import RetrieverConfig, RAGPipeline
 from .factory import RetrieverFactory
 from .reranker import CrossEncoderReranker
 from quantumgenerator.infrastructure.logger import setup_logging
-import logging
 
 logger = setup_logging(__name__)
 
