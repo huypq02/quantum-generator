@@ -3,7 +3,7 @@ from fastapi import Depends, APIRouter, HTTPException
 from quantumgenerator.interfaces.api.constants import (
     HEALTHY_STATUS, 
     SERVICE_NAME, 
-    API_VERSION,
+    VERSION,
 )
 from quantumgenerator.interfaces.api.schemas import (
     GenerationRequest,
@@ -29,7 +29,7 @@ def heath_check():
     return {
         "status": HEALTHY_STATUS,
         "service": SERVICE_NAME,
-        "version": API_VERSION,
+        "version": VERSION,
     }
 
 @router.post("/generation")

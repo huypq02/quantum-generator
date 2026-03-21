@@ -1,6 +1,6 @@
 import torch
 from langchain_community.cross_encoders import HuggingFaceCrossEncoder
-from langchain_classic.retrievers.document_compressors import CrossEncoderReranker as LCCrossEncoderReranker
+from langchain.retrievers.document_compressors import CrossEncoderReranker as LCCrossEncoderReranker
 from quantumgenerator.domain.interfaces import IReranker
 from quantumgenerator.domain.entities.retriever_config import RetrieverConfig
 

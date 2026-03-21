@@ -73,5 +73,20 @@ class GenerateQuantumCodeUseCase:
         :return: Prompt
         :rtype: str
         """
-        return f"Based on this context:\n{context}\n\n\
-            Generate quantum code for: {query}"
+        context_block = context.strip() if context and context.strip() else "No external context provided."
+
+        return (
+            "You are an expert software engineer and technical explainer.\n"
+            "Use the context when relevant, but do not invent APIs, classes, or facts that are not supported.\n"
+            "If the request is quantum-related, produce correct quantum code. If not, produce the best classical solution.\n\n"
+            "Context:\n"
+            f"{context_block}\n\n"
+            "User Request:\n"
+            f"{query}\n\n"
+            "Response Requirements:\n"
+            "1. Provide complete, executable code.\n"
+            "2. Include concise comments only for non-obvious logic.\n"
+            "3. Add a short explanation of approach and assumptions.\n"
+            "4. Mention trade-offs or edge cases when they matter.\n"
+            "5. If requirements are ambiguous, state reasonable assumptions clearly.\n"
+        )

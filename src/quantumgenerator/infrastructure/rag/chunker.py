@@ -7,7 +7,7 @@ def chunking(
         encoding_name: str,
         chunk_size: int,
         chunk_overlap: int,
-    doc_list: Sequence[Any],
+        doc_list: Sequence[Any],
 ):
     """
     Convert text documents to tokens using a text splitter.

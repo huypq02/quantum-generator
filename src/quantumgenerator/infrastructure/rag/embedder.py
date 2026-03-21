@@ -1,4 +1,4 @@
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 MODEL_NAME = {
     "minilm-l6":"sentence-transformers/all-MiniLM-L6-v2",

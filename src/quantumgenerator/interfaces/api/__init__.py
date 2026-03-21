@@ -2,7 +2,7 @@
 
 from quantumgenerator.interfaces.api.constants import (
     HEALTHY_STATUS,
-    API_VERSION,
+    VERSION,
     SERVICE_NAME,
 )
 from quantumgenerator.interfaces.api.schemas import (
@@ -18,7 +18,7 @@ from quantumgenerator.interfaces.api.dependencies import (
 
 __all__ = [
     "HEALTHY_STATUS",
-    "API_VERSION",
+    "VERSION",
     "SERVICE_NAME",
     "GenerationRequest",
     "GenerationResponse",
