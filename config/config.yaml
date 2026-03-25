@@ -1,0 +1,32 @@
+retriever:
+  retriever_type: chroma
+  vectordb_path: data/vectordb/chroma
+  vectordb_mode: local
+  collection_name: quantum_docs
+
+  # Document loading and chunking controls
+  documents:
+    paths:
+      - data/quantum_docs/general/Intro-to-AI-notes.pdf
+      - data/quantum_docs/general/2024-wttc-introduction-to-ai.pdf
+  chunking:
+    encoding_name: cl100k_base
+    chunk_size: 200
+    chunk_overlap: 40
+
+  # Embedder is represented by model key and resolved to an object in code
+  embedder: minilm-l6
+
+  search_type: mmr
+  search_kwargs:
+    k: 10
+    lambda_mult: 0.7
+
+  # Remote mode fields are optional when vectordb_mode is local
+  host: null
+  port: null
+  ssl: false
+
+  rerank_model: BAAI/bge-reranker-base
+  rerank_top_n: 3
+  rerank_device: null

@@ -50,7 +50,3 @@ Thumbs.db
 # Test outputs
 tests/__pycache__/
 tests/*.log
-
-# Configurations
-config/
-!src/quantumgenerator/infrastructure/config
