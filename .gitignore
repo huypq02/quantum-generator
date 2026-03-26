@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+.venv/
+.env*
+build/
+dist/
+*.egg-info/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# Model files
+/models/*
+
+# Data
+/data/processed/*
+/data/raw/*
+
+# Large PDF files
+data/quantum_docs/**/*.pdf
+
+# Vector databases
+data/vectordb/
+*.chroma/
+chroma.sqlite3
+
+# Logs
+*.log
+logs/
+
+# MLflow
+mlflow.db
+mlruns/
+mlartifacts/
+
+# Fine-tuning checkpoints
+checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test outputs
+tests/__pycache__/
+tests/*.log

@@ -1,0 +1,31 @@
+name: CD - Continuous Deployment
+run-name: CD triggered by ${{ github.actor }}
+
+concurrency: production
+
+permissions:
+  contents: read
+
+on:
+  workflow_run:
+    workflows: ["CI - Tests & Quality Checks"]
+    types: [completed]
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    # Only deploy when CI workflow succeeded on main
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'
+    environment:
+      name: production
+      url: ${{ vars.RENDER_APP_URL }}
+
+    steps:
+      - name: Deploy app on Render
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
