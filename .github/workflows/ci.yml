@@ -63,7 +63,7 @@ jobs:
 
       - name: Run unit tests
         run: |
-          python -m coverage run -m unittest
+          python -m coverage run -m pytest
           python -m coverage report -m
 
   build-docker:
