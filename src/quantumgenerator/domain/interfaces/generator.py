@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any, Dict, Optional
 
 
 class IGenerator(ABC):
@@ -13,9 +14,9 @@ class IGenerator(ABC):
         :param kwargs: Additional configuration parameters.
         """
         self.model_name = model_name
-        self.model = None
-        self.tokenizer = None
-        self.config = kwargs
+        self.model: Optional[Any] = None
+        self.tokenizer: Optional[Any] = None
+        self.config: Dict[str, Any] = kwargs
 
     @abstractmethod
     def load_model(self) -> None:
