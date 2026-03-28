@@ -44,7 +44,7 @@ class CodeLlamaModel(IGenerator):
                 dtype = torch.float16 if torch.cuda.is_available() else torch.float32
                 self.model = AutoModelForCausalLM.from_pretrained(
                     self.model_name, 
-                    dtype=dtype,
+                    torch_dtype=dtype,
                     device_map="auto",
                     token=hf_token
                 )
