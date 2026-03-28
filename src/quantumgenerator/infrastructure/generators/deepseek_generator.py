@@ -36,7 +36,7 @@ class DeepSeekModel(IGenerator):
                 self.model = AutoModelForCausalLM.from_pretrained(
                     self.model_name, 
                     trust_remote_code=True, 
-                    dtype=dtype,
+                    torch_dtype=dtype,
                     device_map="auto"
                 )
                 

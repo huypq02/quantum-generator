@@ -1,16 +1,11 @@
-from quantumgenerator.infrastructure.generators import (
-    ModelFactory,
-    DeepSeekModel,
-    CodeGemmaModel,
-    QwenModel,
-    CodeLlamaModel
-)
+from quantumgenerator.infrastructure.generators import ModelFactory
+from quantumgenerator.domain.interfaces import IGenerator
 
 
 def load_model(
         model_type: str,
         model_name: str
-) -> DeepSeekModel | CodeGemmaModel | QwenModel | CodeLlamaModel:
+) -> IGenerator:
     """
     Load and initialize a model of the specified type.
     
@@ -19,7 +14,7 @@ def load_model(
     :param model_name: Name or path of the model.
     :type model_name: str
     :return: Initialized model instance.
-    :rtype: DeepSeekModel | CodeGemmaModel | QwenModel | CodeLlamaModel
+    :rtype: IGenerator
     """
     model = ModelFactory.create_model(
         model_type=model_type,

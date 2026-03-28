@@ -40,9 +40,11 @@ class CodeGemmaModel(IGenerator):
                     quantization_config=quantization_config
                 )
             else:
+                dtype = torch.float16 if torch.cuda.is_available() else torch.float32
                 self.model = AutoModelForCausalLM.from_pretrained(
                     self.model_name, 
                     token=hf_token,
+                    torch_dtype=dtype,
                     trust_remote_code=True
                 )
                 
