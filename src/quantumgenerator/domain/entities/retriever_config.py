@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, Sequence
+from typing import Any, Dict, Sequence, Optional
 
 
 @dataclass
@@ -27,8 +27,8 @@ class RetrieverConfig:
     search_type: str = "mmr"  # Using Maximal Marginal Relevance algorithm
     vectordb_mode: str = "local"
     collection_name: str = "quantum_docs"
-    host: str | None = None
-    port: int | None = None
+    host: Optional[str] = None
+    port: Optional[int] = None
     ssl: bool = False
     search_kwargs: Dict[str, Any] = field(
         default_factory=lambda: {
@@ -38,4 +38,4 @@ class RetrieverConfig:
     )
     rerank_model: str = "BAAI/bge-reranker-base"
     rerank_top_n: int = 3
-    rerank_device: str | None = None
+    rerank_device: Optional[str] = None
