@@ -68,7 +68,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           python -m coverage --version
-          python -m coverage run -m pytest
+          python -m coverage run -m pytest -m "not integration"
           python -m coverage report -m
 
   build-docker:

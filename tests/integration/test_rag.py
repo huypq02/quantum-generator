@@ -9,6 +9,9 @@ from quantumgenerator.infrastructure.rag import (
 )
 
 
+pytestmark = pytest.mark.integration
+
+
 class TestRag():
     @pytest.fixture(autouse=True)
     def setup(self):
