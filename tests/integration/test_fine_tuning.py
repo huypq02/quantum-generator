@@ -11,13 +11,16 @@ from quantumgenerator.domain.entities import (
 )
 
 
+pytestmark = pytest.mark.integration
+
+
 def test_load_data():
     with pytest.raises(ValueError):
         load_data("no_thing")
     
     dataset = load_data("openclaw_quantum")
     assert len(dataset) > 0 
-    
+
 def test_load_model():
     loader = load_model("codegemma","google/codegemma-2b")
     assert loader is not None

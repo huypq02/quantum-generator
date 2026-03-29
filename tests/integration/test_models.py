@@ -7,6 +7,9 @@ from quantumgenerator.infrastructure.generators import (
 )
 
 
+pytestmark = pytest.mark.integration
+
+
 class TestDeepSeekModel():
     @pytest.fixture(autouse=True)
     def set_up(self):
