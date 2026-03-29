@@ -13,7 +13,7 @@ RUN pip install -e .
 EXPOSE 8080
 
 # Setup an app user so the container doesn't run as the root user
-RUN useradd -m app && chown -R app:app /usr/local/app/sentimentanalysis
+RUN useradd -m app && chown -R app:app /usr/local/app/quantumgenerator
 
 USER app
 
