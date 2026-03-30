@@ -1,164 +1,181 @@
 # QuantumGenerator
 
-**Bridging Large Language Models and Quantum Computing**
+QuantumGenerator is a clean-architecture Python project for generating code with LLMs and retrieval-augmented context.
 
-Tired of writing quantum circuits by hand? QuantumGenerator automatically generates production-ready quantum code (Qiskit, PennyLane, Cirq, OpenQASM 3) using fine-tuned LLMs with retrieval-augmented generation.
+Current implementation includes:
 
-The project started as an experiment: _Can we train models to generate quantum algorithms as reliably as they generate classical code?_ The answer is yes—with the right fine-tuning strategy and context retrieval.
+- Model adapters: CodeGemma, DeepSeek, Qwen, CodeLlama
+- RAG pipeline: Chroma or FAISS retrievers with reranking
+- Fine-tuning: LoRA trainer on OPENCLAW quantum dataset
+- API: FastAPI endpoint for code generation
 
-## What This Does
-
-- **Generate quantum code** across frameworks from natural language prompts
-- **Fine-tune open-source models** (CodeGemma, DeepSeek-Coder, Qwen, CodeLlama) on quantum datasets
-- **Retrieve relevant documentation** using RAG to improve code quality
-- **Run locally or on Colab** with mixed-precision quantization
-
-Real use case: Convert "implement a 3-qubit phase estimation" into working Qiskit code in under a second.
-
----
-
-## System Architecture (Clean Architecture)
-
-We follow Clean Architecture to keep domain logic isolated and make infra swappable.
+## Architecture
 
 ```
 src/quantumgenerator/
-├── domain/              # Entities + interfaces (pure core)
-│   ├── entities/
-│   └── interfaces/
-├── application/         # Use-cases / orchestration
-├── infrastructure/      # External integrations
-│   ├── generators/      # LLM model adapters
-│   ├── rag/             # Vector search + retriever
-│   └── fine_tuning/     # LoRA training pipeline
-└── interfaces/          # Entry points / adapters
+├── domain/           # Entities and interfaces
+├── application/      # DTOs, use cases, services
+├── infrastructure/   # Generators, RAG, fine-tuning, config, logging, time
+└── interfaces/       # FastAPI entrypoints and schemas
 ```
 
-**Why this structure?** The core stays testable and stable, while models, RAG, and storage can change without touching domain rules.
+High-level flow:
 
----
+1. API receives a prompt.
+2. Application use case fetches context via RAG pipeline.
+3. Prompt + context are passed to selected generator.
+4. Service returns generated result with execution time.
 
-## Quick Start
+## Requirements
 
-**Requirements**: Python 3.10+, HuggingFace token (for gated models), GPU optional but recommended.
+- Python 3.9+
+- Optional GPU for faster inference/training
+- `HF_TOKEN` in `.env` for gated Hugging Face models (CodeGemma/CodeLlama)
 
-```bash
-git clone https://github.com/huypq02/quantum-forge.git
-cd quantum-forge
-pip install -r requirements.txt
-```
-
-Set `HF_TOKEN` in `.env`:
+Example `.env`:
 
 ```
 HF_TOKEN=hf_xxxxx
 ```
 
-**Basic usage:**
+## Install
+
+```bash
+pip install -e ".[dev]"
+```
+
+If you only need runtime dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Quick Start (Python)
+
+### 1) Use a model directly
 
 ```python
-from quantumgenerator.models.factory import ModelFactory
+from quantumgenerator.infrastructure.generators import ModelFactory
 
-model = ModelFactory.create_model("codegemma", "google/codegemma-2b")
-model.load_model()
+model = ModelFactory.create_model(
+    "codegemma",
+    model_name="google/codegemma-2b",
+    quantize=True,
+)
 
-result = model.generate("Bell state in QASM 3")
+result = model.generate("Generate OpenQASM 3 code for a Bell state")
 print(result)
 ```
 
----
-
-## Supported Models
-
-We tested with:
-
-- **CodeGemma 2B/7B** — Gemma-based, good for quick inference
-- **DeepSeek-Coder 6.7B** — Strong at logical reasoning
-- **Qwen2.5-Coder 7B** — Multilingual, handles edge cases better
-- **CodeLlama 7B** — Meta's instruct-tuned variant
-
-All run with 4-bit quantization. The factory pattern means adding a new model is literally creating a subclass.
-
----
-
-## Fine-Tuning Strategy
-
-We fine-tune on the OPENCLAW quantum dataset using LoRA. This keeps parameter count low (~3.5M trainable params out of ~7B total) while improving domain-specific accuracy.
+### 2) Use the application service (RAG + generation)
 
 ```python
-from trl import SFTTrainer
-from peft import LoraConfig
+from quantumgenerator.application.dto import GenerateQuantumCodeRequest
+from quantumgenerator.interfaces.api.dependencies import DIContainer
 
-config = LoraConfig(
-    task_type="CAUSAL_LM",
-    r=64,  # rank 64 for reasonable quality
-    lora_alpha=16,
-    lora_dropout=0.1
+container = DIContainer()
+service = container.get_code_generation_service(
+    model_type="codegemma",
+    model_name="google/codegemma-2b",
 )
 
-trainer = SFTTrainer(
-    model=model,
-    args=TrainingArguments(output_dir="./output", max_steps=100),
-    train_dataset=load_dataset("webxos/OPENCLAW_quantum_dataset", split="train"),
-    peft_config=config
+response = service.generate(
+    GenerateQuantumCodeRequest(query="Implement 3-qubit phase estimation")
 )
-trainer.train()
+
+print(response.result)
+print(response.execution_time)
 ```
 
-**Reality check:** With 100 steps on a T4, you see measurable improvements in code correctness. We achieved ~78% syntactically correct quantum code generation after fine-tuning (vs ~45% base model).
-
----
-
-## Technical Challenges & Solutions
-
-**1. Device Mismatch (CUDA vs CPU)**
-Initial issue: Models loaded on GPU but tokenizer output stayed on CPU, causing `RuntimeError: expected all tensors to be on the same device`.
-
-```python
-# Solution: explicit device placement
-device = next(model.parameters()).device
-input_ids = tokenizer(...).to(device)
-```
-
-**2. LoRA Adapter Management**
-After training, had to decide: save full model (expensive) vs just adapter (smart).
-
-```python
-# Save only the adapter weights (~50MB vs 14GB)
-sft_trainer.model.save_pretrained("./adapter")
-# Load later: PeftModel.from_pretrained(base_model, "./adapter")
-```
-
-**3. Quantization vs Quality**
-4-bit quantization cuts memory 75%, but quality drops. Found best trade-off was r=64 LoRA rank + flash-attention for inference.
-
----
-
-## Next Steps
-
-Things we're working on:
-
-- REST API layer (FastAPI) for production deployment
-- Streamlit UI for non-technical users
-- Extended framework support (Silq, Q#)
-- Better metrics for code correctness validation
-
----
-
-## Running Tests
+## Run the API
 
 ```bash
-pytest -q
+uvicorn quantumgenerator.interfaces.api.main:app --reload
 ```
 
----
+Endpoints:
 
-## Contributing
+- `GET /api/v1/health`
+- `POST /api/v1/generation`
 
-Open to contributions. If you've fine-tuned on different datasets or built new model adapters, let's talk.
+Example request:
 
----
+```json
+{
+  "query": "Generate OpenQASM 3 code implementing Grover's algorithm"
+}
+```
+
+## Configuration
+
+RAG defaults are loaded from `config/config.yaml`.
+
+Important fields:
+
+- `retriever.retriever_type`: `chroma` or `faiss`
+- `retriever.vectordb_path`: local vector DB path
+- `retriever.documents.paths`: PDF sources to ingest
+- `retriever.embedder`: embedding model key (for example `minilm-l6`)
+- `retriever.search_kwargs`: retrieval settings (`k`, `lambda_mult`)
+- `retriever.rerank_model`: cross-encoder reranker model
+
+## Fine-Tuning (LoRA)
+
+Fine-tuning utilities are in `quantumgenerator.infrastructure.fine_tuning`.
+
+Supported dataset key in code: `openclaw_quantum`.
+
+```python
+from quantumgenerator.infrastructure.fine_tuning import LoRATrainer
+from quantumgenerator.domain.entities import TrainingSession
+
+session = TrainingSession(
+    model_name="google/codegemma-2b",
+    data_id="openclaw_quantum",
+    output_path="./checkpoints",
+    parameter={
+        "model_type": "codegemma",
+        "per_device_train_batch_size": 4,
+        "max_steps": 100,
+        "lora_task_type": "CAUSAL_LM",
+        "lora_r": 64,
+        "lora_alpha": 16,
+        "lora_dropout": 0.1,
+    },
+)
+
+trainer = LoRATrainer()
+result = trainer.train(session)
+print(result.adapter_path)
+```
+
+## Testing
+
+Run all tests:
+
+```bash
+pytest
+```
+
+Run only unit tests:
+
+```bash
+pytest tests/unit
+```
+
+Run integration tests (downloads models/datasets and can be heavy):
+
+```bash
+pytest tests/integration -m integration
+```
+
+## Docker
+
+```bash
+docker build -t quantumgenerator .
+docker run --rm -p 8080:8080 quantumgenerator
+```
 
 ## License
 
-MIT License. See LICENSE for details.
+MIT. See `LICENSE`.
